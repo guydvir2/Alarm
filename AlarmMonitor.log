@@ -1,0 +1,27 @@
+[2018-07-21 23:33:58.5] >>Log file /home/guy/github/Alarm/AlarmMonitor.log was created successfully
+
+log start @HomePi_Alarm, IP:192.168.2.117, OS:linux, Name:HomePi-AlarmSys monitor
+**********************************************************************************
+[2018-07-21 23:33:59.6] HomePi-AlarmSys monitor start
+[2018-07-21 23:33:59.6] IP [192.168.2.117]
+[2018-07-21 23:33:59.6] trigger IOs [16, 26]
+[2018-07-21 23:33:59.6] Indications IOs [21, 20]
+[2018-07-21 23:33:59.6] @BOOT- System Armed
+[2018-07-21 23:33:59.6] logfile: /home/guy/github/Alarm/AlarmMonitor.log
+[2018-07-21 23:33:59.6] [Full-mode Arm] :False
+[2018-07-21 23:33:59.6] [Home-mode] :False
+[2018-07-21 23:33:59.6] [System Arm state] :True
+[2018-07-21 23:33:59.6] [Alarm state] :False
+
+log start @HomePi_Alarm, IP:192.168.2.117, OS:linux, Name:HomePi-AlarmSys monitor
+**********************************************************************************
+[2018-07-21 23:37:04.7] HomePi-AlarmSys monitor start
+[2018-07-21 23:37:04.7] IP [192.168.2.117]
+[2018-07-21 23:37:04.7] trigger IOs [16, 26]
+[2018-07-21 23:37:04.7] Indications IOs [21, 20]
+[2018-07-21 23:37:04.7] @BOOT- System Armed
+[2018-07-21 23:37:04.7] logfile: /home/guy/github/Alarm/AlarmMonitor.log
+[2018-07-21 23:37:04.8] [Full-mode Arm] :False
+[2018-07-21 23:37:04.8] [Home-mode] :False
+[2018-07-21 23:37:04.8] [System Arm state] :True
+[2018-07-21 23:37:04.8] [Alarm state] :False
