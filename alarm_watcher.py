@@ -7,17 +7,19 @@ import time
 class GPIOMonitor:
     def __init__(self, ip=None, alias='HomePi-AlarmSys monitor',
                  listen_pins=[21, 20], trigger_pins=[16, 26],
-                 log_filename='/home/guy/github/Alarm/AlarmMonitor.log'):
+                 log_filepath=''):
         # listen_pins = [sys.arm, alarm.on], trigger_pins=[full, home]
+        self.factory = None
+        self.log_filename = log_filepath+'AlarmMonitor.log'
         self.last_state = [None for i in range(4)]
         self.cbit = cbit.CBit(1000)
 
-        if ip is not None:
+		# operated from remote,but ip belongs to AlarmSys
+        if ip is not None or ip != getip.get_ip()[0]:
             self.factory = PiGPIOFactory(host=ip)
             self.ip_pi = ip
-
+		# case or run localy at AlarmSys
         else:
-            self.factory = None
             self.ip_pi = getip.get_ip()[0]
 
         self.alias = alias
@@ -26,10 +28,11 @@ class GPIOMonitor:
         self.sysarm_hw = Button(listen_pins[0], pin_factory=self.factory)
         self.alarm_hw = Button(listen_pins[1], pin_factory=self.factory)
 
-        self.logger = Log2File(log_filename, name_of_master=self.alias,
+        self.logger = Log2File(self.log_filename, name_of_master=self.alias,
                                time_in_log=1, screen=1)
 
         self.check_state_on_boot(trigger_pins, listen_pins)
+        self.notify('logfile: %s'% self.log_filename)
 
         self.monitor_state()
 
@@ -89,24 +92,13 @@ class GPIOMonitor:
         if set_state == 1:
             self.fullarm_hw.on()
         elif set_state == 0:
-            # case of alarm operated via keypad
-            # if self.sysarm_hw.value == True and self.fullarm_hw.value == False:
-            # self.fullarm_hw.on()
-            # time.sleep(0.5)
-            # self.fullarm_hw.off()
-            # else:
             self.fullarm_hw.off()
 
     def homearm_cb(self, set_state):
         if set_state == 1:
             self.homearm_hw.on()
         elif set_state == 0:
-            # case of alarm operated via keypad
-            # if self.sysarm_hw.value == True and self.homearm_hw.value == False:
-            # self.homearm_hw.on()
-            # time.sleep(0.5)
-            # self.homearm_hw.off()
-            # else:
+            hw.off()
             self.homearm_hw.off()
 
     def disarm(self):
@@ -133,15 +125,14 @@ class MQTTnotify:
         self.mqtt.pub(topic=self.msg_topic, payload='AlarmSys in ON and monitoring')
 
     def commands(self, mqtt_msg):
-        if mqtt_msg.lower() == 'info':
-            self.mqtt.pub(topic=self.msg_topic, payload='Applicable commads:\n1)log\n2)status\n3)disarm\n4)full_arm\n5) home_arm')
-        elif mqtt_msg.lower() == 'log':
-            t_log = XTractLastLogEvent('/home/guy/github/Alarm/AlarmMonitor.log')
+        if mqtt_msg.lower() == 'info' or mqtt_msg == '5':
+            self.mqtt.pub(topic=self.msg_topic, payload='Applicable commands:\n***********************\n0) disarm\n1) full_arm\n2) home_arm\n3) status\n4) log\n5) info')
+        elif mqtt_msg.lower() == 'log' or mqtt_msg == '4':
+            t_log = XTractLastLogEvent(A.log_filename)
             self.mqtt.pub(topic=self.msg_topic, payload=t_log.xport_chopped_log())
-        elif mqtt_msg.lower() == 'status':
-            t_log = XTractLastLogEvent('/home/guy/github/Alarm/AlarmMonitor.log')
+        elif mqtt_msg.lower() == 'status' or mqtt_msg == '3':
             self.mqtt.pub(topic=self.msg_topic, payload=A.get_status())
-        elif mqtt_msg.lower() == 'disarm':
+        elif mqtt_msg.lower() == 'disarm' or mqtt_msg == '0':
             self.mqtt.pub(topic=self.msg_topic, payload='Disarmed')
             A.disarm()
             time.sleep(0.5)
@@ -149,7 +140,7 @@ class MQTTnotify:
                 A.notify('System disarmed')
             else:
                 A.notify('System failed to disarm')
-        elif mqtt_msg.lower() == 'full_arm':
+        elif mqtt_msg.lower() == 'full_arm' or mqtt_msg.lower() == '1':
             self.mqtt.pub(topic=self.msg_topic, payload='full mode armed')
             A.fullarm_cb(1)
             time.sleep(0.5)
@@ -157,7 +148,7 @@ class MQTTnotify:
                 A.notify('System Full armed')
             else:
                 A.notify('System failed to arm')
-        elif mqtt_msg.lower() == 'home_arm':
+        elif mqtt_msg.lower() == 'home_arm' or mqtt_msg.lower() == '2':
             self.mqtt.pub(topic=self.msg_topic, payload='home mode armed')
             A.homearm_cb(1)
             time.sleep(0.5)
@@ -167,15 +158,15 @@ class MQTTnotify:
                 A.notify('System failed to arm')
 
 
-main_path = '/home/guy/github/'
-path.append(main_path + 'LocalSwitch')
-path.append(main_path + 'RemoteSwitch')
-path.append(main_path + 'modules')
+MAIN_PATH = '/home/guy/github/'
+path.append(MAIN_PATH + 'LocalSwitch')
+path.append(MAIN_PATH + 'RemoteSwitch')
+path.append(MAIN_PATH + 'modules')
 
 from mqtt_switch import MQTTClient
 from localswitches import Log2File, XTractLastLogEvent
 import getip
 import cbit
 
-A = GPIOMonitor(ip='192.168.2.117')
+A = GPIOMonitor(ip='192.168.2.117', log_filepath=MAIN_PATH+'Alarm/')
 B = MQTTnotify(sub_topic='/HomePi/Dvir/AlarmSys', msg_topic='/HomePi/Dvir/Messages', mqtt_server='iot.eclipse.org')
