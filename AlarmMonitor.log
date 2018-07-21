@@ -1,0 +1,530 @@
+[2018-07-20 17:13:23.0] >>Log file /home/guy/github/Alarm/AlarmMonitor.log was created successfully
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:gpio_monitor
+*****************************************************************
+[2018-07-20 17:13:23.1] gpio_monitor start
+[2018-07-20 17:13:23.1] IP [192.168.2.113]
+[2018-07-20 17:13:23.1] trigger IOs [16, 26]
+[2018-07-20 17:13:23.1] Indications IOs [21, 20]
+[2018-07-20 17:13:23.1] @Boot -System Unarmed
+[2018-07-20 17:13:23.1] [Full-mode Arm] :False
+[2018-07-20 17:13:23.1] [Home-mode] :False
+[2018-07-20 17:13:23.1] [System Arm state] :False
+[2018-07-20 17:13:23.1] [Alarm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:gpio_monitor
+*****************************************************************
+[2018-07-20 17:24:06.2] gpio_monitor start
+[2018-07-20 17:24:06.2] IP [192.168.2.113]
+[2018-07-20 17:24:06.2] trigger IOs [16, 26]
+[2018-07-20 17:24:06.2] Indications IOs [21, 20]
+[2018-07-20 17:24:06.2] @Boot -System Unarmed
+[2018-07-20 17:24:06.2] [Full-mode Arm] :False
+[2018-07-20 17:24:06.2] [Home-mode] :False
+[2018-07-20 17:24:06.2] [System Arm state] :False
+[2018-07-20 17:24:06.2] [Alarm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:gpio_monitor
+*****************************************************************
+[2018-07-20 17:25:11.8] gpio_monitor start
+[2018-07-20 17:25:11.8] IP [192.168.2.113]
+[2018-07-20 17:25:11.8] trigger IOs [16, 26]
+[2018-07-20 17:25:11.8] Indications IOs [21, 20]
+[2018-07-20 17:25:11.8] @Boot -System Unarmed
+[2018-07-20 17:25:11.8] [Full-mode Arm] :False
+[2018-07-20 17:25:11.8] [Home-mode] :False
+[2018-07-20 17:25:11.8] [System Arm state] :False
+[2018-07-20 17:25:11.8] [Alarm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:gpio_monitor
+*****************************************************************
+[2018-07-20 17:25:55.7] gpio_monitor start
+[2018-07-20 17:25:55.7] IP [192.168.2.113]
+[2018-07-20 17:25:55.7] trigger IOs [16, 26]
+[2018-07-20 17:25:55.7] Indications IOs [21, 20]
+[2018-07-20 17:25:55.7] @Boot -System Unarmed
+[2018-07-20 17:25:55.7] [Full-mode Arm] :False
+[2018-07-20 17:25:55.7] [Home-mode] :False
+[2018-07-20 17:25:55.7] [System Arm state] :False
+[2018-07-20 17:25:55.7] [Alarm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:gpio_monitor
+*****************************************************************
+[2018-07-20 17:26:51.0] gpio_monitor start
+[2018-07-20 17:26:51.0] IP [192.168.2.113]
+[2018-07-20 17:26:51.0] trigger IOs [16, 26]
+[2018-07-20 17:26:51.0] Indications IOs [21, 20]
+[2018-07-20 17:26:51.0] @Boot -System Unarmed
+[2018-07-20 17:26:51.0] [Full-mode Arm] :False
+[2018-07-20 17:26:51.0] [Home-mode] :False
+[2018-07-20 17:26:51.0] [System Arm state] :False
+[2018-07-20 17:26:51.0] [Alarm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:gpio_monitor
+*****************************************************************
+[2018-07-20 17:27:38.5] gpio_monitor start
+[2018-07-20 17:27:38.5] IP [192.168.2.113]
+[2018-07-20 17:27:38.5] trigger IOs [16, 26]
+[2018-07-20 17:27:38.5] Indications IOs [21, 20]
+[2018-07-20 17:27:38.5] @Boot -System Unarmed
+[2018-07-20 17:27:38.5] [Full-mode Arm] :False
+[2018-07-20 17:27:38.5] [Home-mode] :False
+[2018-07-20 17:27:38.5] [System Arm state] :False
+[2018-07-20 17:27:38.5] [Alarm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:gpio_monitor
+*****************************************************************
+[2018-07-20 17:28:40.5] gpio_monitor start
+[2018-07-20 17:28:40.5] IP [192.168.2.113]
+[2018-07-20 17:28:40.5] trigger IOs [16, 26]
+[2018-07-20 17:28:40.5] Indications IOs [21, 20]
+[2018-07-20 17:28:40.5] @Boot -System Unarmed
+[2018-07-20 17:28:40.5] [Full-mode Arm] :False
+[2018-07-20 17:28:40.5] [Home-mode] :False
+[2018-07-20 17:28:40.5] [System Arm state] :False
+[2018-07-20 17:28:40.5] [Alarm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:gpio_monitor
+*****************************************************************
+[2018-07-20 17:29:54.1] gpio_monitor start
+[2018-07-20 17:29:54.1] IP [192.168.2.113]
+[2018-07-20 17:29:54.1] trigger IOs [16, 26]
+[2018-07-20 17:29:54.1] Indications IOs [21, 20]
+[2018-07-20 17:29:54.1] @Boot -System Unarmed
+[2018-07-20 17:29:54.1] [Full-mode Arm] :False
+[2018-07-20 17:29:54.1] [Home-mode] :False
+[2018-07-20 17:29:54.1] [System Arm state] :False
+[2018-07-20 17:29:54.1] [Alarm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:gpio_monitor
+*****************************************************************
+[2018-07-20 18:35:34.4] gpio_monitor start
+[2018-07-20 18:35:34.4] IP [192.168.2.113]
+[2018-07-20 18:35:34.4] trigger IOs [16, 26]
+[2018-07-20 18:35:34.4] Indications IOs [21, 20]
+[2018-07-20 18:35:34.4] @Boot -System Unarmed
+[2018-07-20 18:35:34.4] [Full-mode Arm] :False
+[2018-07-20 18:35:34.4] [Home-mode] :False
+[2018-07-20 18:35:34.4] [System Arm state] :False
+[2018-07-20 18:35:34.4] [Alarm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:gpio_monitor
+*****************************************************************
+[2018-07-20 18:35:58.2] gpio_monitor start
+[2018-07-20 18:35:58.2] IP [192.168.2.113]
+[2018-07-20 18:35:58.2] trigger IOs [16, 26]
+[2018-07-20 18:35:58.2] Indications IOs [21, 20]
+[2018-07-20 18:35:58.2] @Boot -System Unarmed
+[2018-07-20 18:35:58.2] [Full-mode Arm] :False
+[2018-07-20 18:35:58.2] [Home-mode] :False
+[2018-07-20 18:35:58.2] [System Arm state] :False
+[2018-07-20 18:35:58.2] [Alarm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:gpio_monitor
+*****************************************************************
+[2018-07-20 18:37:02.0] gpio_monitor start
+[2018-07-20 18:37:02.0] IP [192.168.2.113]
+[2018-07-20 18:37:02.0] trigger IOs [16, 26]
+[2018-07-20 18:37:02.0] Indications IOs [21, 20]
+[2018-07-20 18:37:02.0] @Boot -System Unarmed
+[2018-07-20 18:37:02.0] [Full-mode Arm] :False
+[2018-07-20 18:37:02.0] [Home-mode] :False
+[2018-07-20 18:37:02.0] [System Arm state] :False
+[2018-07-20 18:37:02.0] [Alarm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:gpio_monitor
+*****************************************************************
+[2018-07-20 18:38:18.1] gpio_monitor start
+[2018-07-20 18:38:18.1] IP [192.168.2.113]
+[2018-07-20 18:38:18.1] trigger IOs [16, 26]
+[2018-07-20 18:38:18.1] Indications IOs [21, 20]
+[2018-07-20 18:38:18.1] @Boot -System Unarmed
+[2018-07-20 18:38:18.1] [Full-mode Arm] :False
+[2018-07-20 18:38:18.1] [Home-mode] :False
+[2018-07-20 18:38:18.1] [System Arm state] :False
+[2018-07-20 18:38:18.1] [Alarm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:gpio_monitor
+*****************************************************************
+[2018-07-20 18:39:10.2] gpio_monitor start
+[2018-07-20 18:39:10.2] IP [192.168.2.113]
+[2018-07-20 18:39:10.2] trigger IOs [16, 26]
+[2018-07-20 18:39:10.2] Indications IOs [21, 20]
+[2018-07-20 18:39:10.2] @Boot -System Unarmed
+[2018-07-20 18:39:10.2] [Full-mode Arm] :False
+[2018-07-20 18:39:10.2] [Home-mode] :False
+[2018-07-20 18:39:10.2] [System Arm state] :False
+[2018-07-20 18:39:10.2] [Alarm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:gpio_monitor
+*****************************************************************
+[2018-07-20 18:48:25.8] gpio_monitor start
+[2018-07-20 18:48:25.8] IP [192.168.2.113]
+[2018-07-20 18:48:25.8] trigger IOs [16, 26]
+[2018-07-20 18:48:25.8] Indications IOs [21, 20]
+[2018-07-20 18:48:25.8] @Boot -System Unarmed
+[2018-07-20 18:48:25.8] [Full-mode Arm] :False
+[2018-07-20 18:48:25.8] [Home-mode] :False
+[2018-07-20 18:48:25.8] [System Arm state] :False
+[2018-07-20 18:48:25.8] [Alarm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:gpio_monitor
+*****************************************************************
+[2018-07-20 18:52:08.8] gpio_monitor start
+[2018-07-20 18:52:08.8] IP [192.168.2.113]
+[2018-07-20 18:52:08.8] trigger IOs [16, 26]
+[2018-07-20 18:52:08.8] Indications IOs [21, 20]
+[2018-07-20 18:52:08.8] @Boot -System Unarmed
+[2018-07-20 18:52:08.8] [Full-mode Arm] :False
+[2018-07-20 18:52:08.8] [Home-mode] :False
+[2018-07-20 18:52:08.8] [System Arm state] :False
+[2018-07-20 18:52:08.8] [Alarm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:gpio_monitor
+*****************************************************************
+[2018-07-20 18:53:12.0] gpio_monitor start
+[2018-07-20 18:53:12.0] IP [192.168.2.113]
+[2018-07-20 18:53:12.0] trigger IOs [16, 26]
+[2018-07-20 18:53:12.0] Indications IOs [21, 20]
+[2018-07-20 18:53:12.0] @Boot -System Unarmed
+[2018-07-20 18:53:12.0] [Full-mode Arm] :False
+[2018-07-20 18:53:12.0] [Home-mode] :False
+[2018-07-20 18:53:12.0] [System Arm state] :False
+[2018-07-20 18:53:12.0] [Alarm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:gpio_monitor
+*****************************************************************
+[2018-07-20 18:55:34.8] gpio_monitor start
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:gpio_monitor
+*****************************************************************
+[2018-07-20 18:57:12.6] gpio_monitor start
+[2018-07-20 18:57:12.6] IP [192.168.2.117]
+[2018-07-20 18:57:12.6] trigger IOs [16, 26]
+[2018-07-20 18:57:12.6] Indications IOs [21, 20]
+[2018-07-20 18:57:12.7] @Boot -System Unarmed
+[2018-07-20 18:57:12.7] [Full-mode Arm] :False
+[2018-07-20 18:57:12.7] [Home-mode] :False
+[2018-07-20 18:57:12.7] [System Arm state] :False
+[2018-07-20 18:57:12.7] [Alarm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:gpio_monitor
+*****************************************************************
+[2018-07-20 18:59:50.7] gpio_monitor start
+[2018-07-20 18:59:50.7] IP [192.168.2.117]
+[2018-07-20 18:59:50.7] trigger IOs [16, 26]
+[2018-07-20 18:59:50.7] Indications IOs [21, 20]
+[2018-07-20 18:59:50.8] @BOOT- System Armed
+[2018-07-20 18:59:50.8] [Full-mode Arm] :True
+[2018-07-20 18:59:50.8] [Home-mode] :False
+[2018-07-20 18:59:50.8] [System Arm state] :False
+[2018-07-20 18:59:50.8] [Alarm state] :False
+[2018-07-20 18:59:51.8] [System Arm state] :True
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:gpio_monitor
+*****************************************************************
+[2018-07-20 19:00:08.9] gpio_monitor start
+[2018-07-20 19:00:08.9] IP [192.168.2.117]
+[2018-07-20 19:00:08.9] trigger IOs [16, 26]
+[2018-07-20 19:00:08.9] Indications IOs [21, 20]
+[2018-07-20 19:00:08.9] @BOOT- System Armed
+[2018-07-20 19:00:08.9] [Full-mode Arm] :True
+[2018-07-20 19:00:08.9] [Home-mode] :False
+[2018-07-20 19:00:08.9] [System Arm state] :True
+[2018-07-20 19:00:08.9] [Alarm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:gpio_monitor
+*****************************************************************
+[2018-07-20 19:00:25.4] gpio_monitor start
+[2018-07-20 19:00:25.4] IP [192.168.2.117]
+[2018-07-20 19:00:25.4] trigger IOs [16, 26]
+[2018-07-20 19:00:25.4] Indications IOs [21, 20]
+[2018-07-20 19:00:25.5] @Boot -System Unarmed
+[2018-07-20 19:00:25.5] [Full-mode Arm] :False
+[2018-07-20 19:00:25.5] [Home-mode] :False
+[2018-07-20 19:00:25.5] [System Arm state] :True
+[2018-07-20 19:00:25.5] [Alarm state] :False
+[2018-07-20 19:00:26.5] [System Arm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:gpio_monitor
+*****************************************************************
+[2018-07-20 19:03:01.4] gpio_monitor start
+[2018-07-20 19:03:01.4] IP [192.168.2.117]
+[2018-07-20 19:03:01.4] trigger IOs [16, 26]
+[2018-07-20 19:03:01.4] Indications IOs [21, 20]
+[2018-07-20 19:03:01.4] @Boot -System Unarmed
+[2018-07-20 19:03:01.4] [Full-mode Arm] :False
+[2018-07-20 19:03:01.4] [Home-mode] :False
+[2018-07-20 19:03:01.4] [System Arm state] :False
+[2018-07-20 19:03:01.4] [Alarm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:gpio_monitor
+*****************************************************************
+[2018-07-20 19:03:18.0] gpio_monitor start
+[2018-07-20 19:03:18.0] IP [192.168.2.117]
+[2018-07-20 19:03:18.0] trigger IOs [16, 26]
+[2018-07-20 19:03:18.0] Indications IOs [21, 20]
+[2018-07-20 19:03:18.0] @Boot -System Unarmed
+[2018-07-20 19:03:18.0] [Full-mode Arm] :False
+[2018-07-20 19:03:18.0] [Home-mode] :False
+[2018-07-20 19:03:18.0] [System Arm state] :False
+[2018-07-20 19:03:18.0] [Alarm state] :False
+[2018-07-20 19:03:22.3] [Full-mode Arm] :True
+[2018-07-20 19:03:22.3] [System Arm state] :True
+[2018-07-20 19:03:39.5] [Full-mode Arm] :False
+[2018-07-20 19:03:40.5] [System Arm state] :False
+[2018-07-20 19:04:08.8] [Home-mode] :True
+[2018-07-20 19:04:08.8] [System Arm state] :True
+[2018-07-20 19:04:20.4] [Home-mode] :False
+[2018-07-20 19:04:21.4] [System Arm state] :False
+[2018-07-20 19:05:57.5] [System Arm state] :True
+[2018-07-20 19:06:55.5] [System Arm state] :False
+[2018-07-20 19:08:54.0] [System Arm state] :True
+[2018-07-20 19:09:16.6] [System Arm state] :False
+[2018-07-20 19:09:40.3] [Full-mode Arm] :True
+[2018-07-20 19:09:40.3] [System Arm state] :True
+[2018-07-20 19:10:20.2] [Full-mode Arm] :False
+[2018-07-20 19:10:21.2] [System Arm state] :False
+[2018-07-20 19:11:31.5] [Home-mode] :True
+[2018-07-20 19:11:31.5] [System Arm state] :True
+[2018-07-20 19:11:48.8] [Home-mode] :False
+[2018-07-20 19:11:51.1] [System Arm state] :False
+[2018-07-20 19:11:58.2] [System Arm state] :True
+[2018-07-20 19:12:13.2] [Home-mode] :True
+[2018-07-20 19:12:21.7] [Home-mode] :False
+[2018-07-20 19:12:24.2] [System Arm state] :False
+[2018-07-20 19:12:54.0] [System Arm state] :True
+[2018-07-20 19:13:10.1] [Full-mode Arm] :True
+[2018-07-20 19:13:17.2] [Full-mode Arm] :False
+[2018-07-20 19:13:18.2] [System Arm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:gpio_monitor
+*****************************************************************
+[2018-07-20 19:16:16.6] gpio_monitor start
+[2018-07-20 19:16:16.6] IP [192.168.2.117]
+[2018-07-20 19:16:16.6] trigger IOs [16, 26]
+[2018-07-20 19:16:16.6] Indications IOs [21, 20]
+[2018-07-20 19:16:16.6] @Boot -System Unarmed
+[2018-07-20 19:16:16.6] [Full-mode Arm] :False
+[2018-07-20 19:16:16.6] [Home-mode] :False
+[2018-07-20 19:16:16.6] [System Arm state] :False
+[2018-07-20 19:16:16.6] [Alarm state] :False
+[2018-07-20 19:16:26.2] [System Arm state] :True
+[2018-07-20 19:16:30.3] [System Arm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:gpio_monitor
+*****************************************************************
+[2018-07-20 19:18:06.3] gpio_monitor start
+[2018-07-20 19:18:06.3] IP [192.168.2.117]
+[2018-07-20 19:18:06.3] trigger IOs [16, 26]
+[2018-07-20 19:18:06.3] Indications IOs [21, 20]
+[2018-07-20 19:18:06.3] @Boot -System Unarmed
+[2018-07-20 19:18:06.3] [Full-mode Arm] :False
+[2018-07-20 19:18:06.3] [Home-mode] :False
+[2018-07-20 19:18:06.3] [System Arm state] :False
+[2018-07-20 19:18:06.3] [Alarm state] :False
+[2018-07-20 19:18:21.9] [Full-mode Arm] :True
+[2018-07-20 19:18:21.9] [System Arm state] :True
+[2018-07-20 19:18:29.3] [Full-mode Arm] :False
+[2018-07-20 19:18:30.5] [System Arm state] :False
+[2018-07-20 19:18:59.0] [Home-mode] :True
+[2018-07-20 19:19:01.0] [System Arm state] :True
+[2018-07-20 19:19:05.9] [Home-mode] :False
+[2018-07-20 19:19:08.5] [System Arm state] :False
+[2018-07-20 19:19:22.8] [System Arm state] :True
+[2018-07-20 19:19:24.8] [Home-mode] :True
+[2018-07-20 19:19:26.3] [Home-mode] :False
+[2018-07-20 19:19:28.4] [System Arm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:gpio_monitor
+*****************************************************************
+[2018-07-20 19:20:08.2] gpio_monitor start
+[2018-07-20 19:20:08.2] IP [192.168.2.117]
+[2018-07-20 19:20:08.2] trigger IOs [16, 26]
+[2018-07-20 19:20:08.2] Indications IOs [21, 20]
+[2018-07-20 19:20:08.2] @Boot -System Unarmed
+[2018-07-20 19:20:08.3] [Full-mode Arm] :False
+[2018-07-20 19:20:08.3] [Home-mode] :False
+[2018-07-20 19:20:08.3] [System Arm state] :False
+[2018-07-20 19:20:08.3] [Alarm state] :False
+[2018-07-20 19:20:32.6] [System Arm state] :True
+[2018-07-20 19:21:06.7] [System Arm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:gpio_monitor
+*****************************************************************
+[2018-07-20 19:22:44.8] gpio_monitor start
+[2018-07-20 19:22:44.8] IP [192.168.2.117]
+[2018-07-20 19:22:44.8] trigger IOs [16, 26]
+[2018-07-20 19:22:44.8] Indications IOs [21, 20]
+[2018-07-20 19:22:45.3] @Boot -System Unarmed
+[2018-07-20 19:22:45.4] [Full-mode Arm] :False
+[2018-07-20 19:22:45.4] [Home-mode] :False
+[2018-07-20 19:22:45.4] [System Arm state] :False
+[2018-07-20 19:22:45.4] [Alarm state] :False
+[2018-07-20 19:23:02.7] [Home-mode] :True
+[2018-07-20 19:23:04.0] [System Arm state] :True
+[2018-07-20 19:23:27.9] [Home-mode] :False
+[2018-07-20 19:23:30.5] [System Arm state] :False
+[2018-07-20 19:24:13.5] [System Arm state] :True
+[2018-07-20 19:24:40.4] [System Arm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:gpio_monitor
+*****************************************************************
+[2018-07-20 20:17:58.6] gpio_monitor start
+[2018-07-20 20:17:58.6] IP [192.168.2.117]
+[2018-07-20 20:17:58.6] trigger IOs [16, 26]
+[2018-07-20 20:17:58.6] Indications IOs [21, 20]
+[2018-07-20 20:17:58.6] @Boot -System Unarmed
+[2018-07-20 20:17:58.6] [Full-mode Arm] :False
+[2018-07-20 20:17:58.6] [Home-mode] :False
+[2018-07-20 20:17:58.6] [System Arm state] :False
+[2018-07-20 20:17:58.6] [Alarm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:gpio_monitor
+*****************************************************************
+[2018-07-20 20:18:20.6] gpio_monitor start
+[2018-07-20 20:18:20.6] IP [192.168.2.117]
+[2018-07-20 20:18:20.6] trigger IOs [16, 26]
+[2018-07-20 20:18:20.6] Indications IOs [21, 20]
+[2018-07-20 20:18:20.6] @Boot -System Unarmed
+[2018-07-20 20:18:20.7] [Full-mode Arm] :False
+[2018-07-20 20:18:20.7] [Home-mode] :False
+[2018-07-20 20:18:20.7] [System Arm state] :False
+[2018-07-20 20:18:20.7] [Alarm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:gpio_monitor
+*****************************************************************
+[2018-07-20 20:19:12.3] gpio_monitor start
+[2018-07-20 20:19:12.3] IP [192.168.2.117]
+[2018-07-20 20:19:12.3] trigger IOs [16, 26]
+[2018-07-20 20:19:12.3] Indications IOs [21, 20]
+[2018-07-20 20:19:12.3] @Boot -System Unarmed
+[2018-07-20 20:19:12.3] [Full-mode Arm] :False
+[2018-07-20 20:19:12.3] [Home-mode] :False
+[2018-07-20 20:19:12.3] [System Arm state] :False
+[2018-07-20 20:19:12.3] [Alarm state] :False
+[2018-07-20 20:19:16.7] System disarmed
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:gpio_monitor
+*****************************************************************
+[2018-07-20 20:20:06.2] gpio_monitor start
+[2018-07-20 20:20:06.2] IP [192.168.2.117]
+[2018-07-20 20:20:06.2] trigger IOs [16, 26]
+[2018-07-20 20:20:06.2] Indications IOs [21, 20]
+[2018-07-20 20:20:06.2] @Boot -System Unarmed
+[2018-07-20 20:20:06.2] [Full-mode Arm] :False
+[2018-07-20 20:20:06.2] [Home-mode] :False
+[2018-07-20 20:20:06.2] [System Arm state] :False
+[2018-07-20 20:20:06.2] [Alarm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:gpio_monitor
+*****************************************************************
+[2018-07-20 20:22:00.9] gpio_monitor start
+[2018-07-20 20:22:00.9] IP [192.168.2.117]
+[2018-07-20 20:22:00.9] trigger IOs [16, 26]
+[2018-07-20 20:22:00.9] Indications IOs [21, 20]
+[2018-07-20 20:22:01.0] @Boot -System Unarmed
+[2018-07-20 20:22:01.0] [Full-mode Arm] :False
+[2018-07-20 20:22:01.0] [Home-mode] :False
+[2018-07-20 20:22:01.0] [System Arm state] :False
+[2018-07-20 20:22:01.0] [Alarm state] :False
+[2018-07-20 20:22:12.8] System Full armed
+[2018-07-20 20:22:13.1] [Full-mode Arm] :True
+[2018-07-20 20:22:13.1] [System Arm state] :True
+[2018-07-20 20:22:30.4] [System Arm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:gpio_monitor
+*****************************************************************
+[2018-07-20 20:24:05.2] gpio_monitor start
+[2018-07-20 20:24:05.2] IP [192.168.2.117]
+[2018-07-20 20:24:05.2] trigger IOs [16, 26]
+[2018-07-20 20:24:05.2] Indications IOs [21, 20]
+[2018-07-20 20:24:05.2] @BOOT- System Armed
+[2018-07-20 20:24:05.3] [Full-mode Arm] :True
+[2018-07-20 20:24:05.3] [Home-mode] :False
+[2018-07-20 20:24:05.3] [System Arm state] :False
+[2018-07-20 20:24:05.3] [Alarm state] :False
+[2018-07-20 20:24:13.4] System failed to arm
+[2018-07-20 20:24:20.2] System failed to arm
+[2018-07-20 20:24:29.8] System disarmed
+[2018-07-20 20:24:49.1] System failed to arm
+[2018-07-20 20:24:59.5] System failed to arm
+[2018-07-20 20:25:00.0] [Home-mode] :True
+[2018-07-20 20:25:00.0] [System Arm state] :True
+[2018-07-20 20:25:08.1] [Full-mode Arm] :False
+[2018-07-20 20:25:08.5] System failed to disarm
+[2018-07-20 20:25:09.1] [System Arm state] :False
+[2018-07-20 20:25:15.2] [System Arm state] :True
+[2018-07-20 20:25:28.4] [System Arm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:gpio_monitor
+*****************************************************************
+[2018-07-20 20:26:02.6] gpio_monitor start
+[2018-07-20 20:26:02.6] IP [192.168.2.117]
+[2018-07-20 20:26:02.6] trigger IOs [16, 26]
+[2018-07-20 20:26:02.6] Indications IOs [21, 20]
+[2018-07-20 20:26:02.6] @BOOT- System Armed
+[2018-07-20 20:26:02.6] [Full-mode Arm] :False
+[2018-07-20 20:26:02.6] [Home-mode] :True
+[2018-07-20 20:26:02.6] [System Arm state] :False
+[2018-07-20 20:26:02.6] [Alarm state] :False
+[2018-07-20 20:26:07.2] System disarmed
+[2018-07-20 20:26:18.9] [Full-mode Arm] :True
+[2018-07-20 20:26:18.9] [System Arm state] :True
+[2018-07-20 20:26:19.0] System Full armed
+[2018-07-20 20:26:33.0] System failed to disarm
+[2018-07-20 20:26:33.1] [Full-mode Arm] :False
+[2018-07-20 20:26:34.1] [System Arm state] :False
+[2018-07-20 20:26:52.2] [System Arm state] :True
+[2018-07-20 20:26:55.2] [Home-mode] :False
+[2018-07-20 20:26:55.7] System failed to disarm
+[2018-07-20 20:26:57.2] [System Arm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:gpio_monitor
+*****************************************************************
+[2018-07-20 20:29:12.1] gpio_monitor start
+[2018-07-20 20:29:12.1] IP [192.168.2.117]
+[2018-07-20 20:29:12.1] trigger IOs [16, 26]
+[2018-07-20 20:29:12.1] Indications IOs [21, 20]
+[2018-07-20 20:29:12.1] @Boot -System Unarmed
+[2018-07-20 20:29:12.1] [Full-mode Arm] :False
+[2018-07-20 20:29:12.1] [Home-mode] :False
+[2018-07-20 20:29:12.1] [System Arm state] :False
+[2018-07-20 20:29:12.2] [Alarm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:gpio_monitor
+*****************************************************************
+[2018-07-20 20:30:54.0] gpio_monitor start
+[2018-07-20 20:30:54.0] IP [192.168.2.117]
+[2018-07-20 20:30:54.0] trigger IOs [16, 26]
+[2018-07-20 20:30:54.0] Indications IOs [21, 20]
+[2018-07-20 20:30:54.0] @Boot -System Unarmed
+[2018-07-20 20:30:54.0] [Full-mode Arm] :False
+[2018-07-20 20:30:54.0] [Home-mode] :False
+[2018-07-20 20:30:54.0] [System Arm state] :False
+[2018-07-20 20:30:54.0] [Alarm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:HomePi-AlarmSys monitor
+****************************************************************************
+[2018-07-20 20:42:11.3] HomePi-AlarmSys monitor start
+[2018-07-20 20:42:11.3] IP [192.168.2.117]
+[2018-07-20 20:42:11.3] trigger IOs [16, 26]
+[2018-07-20 20:42:11.3] Indications IOs [21, 20]
+[2018-07-20 20:42:11.3] @Boot -System Unarmed
+[2018-07-20 20:42:11.3] [Full-mode Arm] :False
+[2018-07-20 20:42:11.3] [Home-mode] :False
+[2018-07-20 20:42:11.3] [System Arm state] :False
+[2018-07-20 20:42:11.3] [Alarm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:HomePi-AlarmSys monitor
+****************************************************************************
+[2018-07-20 20:44:04.8] HomePi-AlarmSys monitor start
+[2018-07-20 20:44:04.8] IP [192.168.2.117]
+[2018-07-20 20:44:04.8] trigger IOs [16, 26]
+[2018-07-20 20:44:04.8] Indications IOs [21, 20]
+[2018-07-20 20:44:04.8] @Boot -System Unarmed
+[2018-07-20 20:44:04.8] [Full-mode Arm] :False
+[2018-07-20 20:44:04.8] [Home-mode] :False
+[2018-07-20 20:44:04.8] [System Arm state] :False
+[2018-07-20 20:44:04.8] [Alarm state] :False
+[2018-07-20 23:49:48.1] [System Arm state] :True
