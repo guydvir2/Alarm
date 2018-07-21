@@ -46,10 +46,10 @@ class GPIOMonitor:
 
         self.cbit.append_process(const_check_state)
         self.cbit.init_thread()
-    
+
     def get_status(self):
-        msg='Empty'
-        #print(self.sysarm_hw.value)
+        msg = 'Empty'
+        # print(self.sysarm_hw.value)
         if self.sysarm_hw.value == True:
             if self.fullarm_hw.value == True:
                 msg = 'System armed - Full Mode'
@@ -59,11 +59,12 @@ class GPIOMonitor:
                 msg = 'System armed - Manually'
         else:
             msg = 'System is unarmed'
-            
+
         if self.alarm_hw.value == True:
             msg = 'System is in ALARM MODE'
         return msg
-        tmp_status = [str(self.fullarm_hw.value), str(self.homearm_hw.value), str(self.sysarm_hw.value), str(self.alarm_hw.value)]
+        tmp_status = [str(self.fullarm_hw.value), str(self.homearm_hw.value), str(self.sysarm_hw.value),
+                      str(self.alarm_hw.value)]
         print(tmp_status)
         return 1
 
@@ -89,26 +90,26 @@ class GPIOMonitor:
             self.fullarm_hw.on()
         elif set_state == 0:
             # case of alarm operated via keypad
-            #if self.sysarm_hw.value == True and self.fullarm_hw.value == False:
-                #self.fullarm_hw.on()
-                #time.sleep(0.5)
-                #self.fullarm_hw.off()
-            #else:
+            # if self.sysarm_hw.value == True and self.fullarm_hw.value == False:
+            # self.fullarm_hw.on()
+            # time.sleep(0.5)
+            # self.fullarm_hw.off()
+            # else:
             self.fullarm_hw.off()
-            
+
     def homearm_cb(self, set_state):
         if set_state == 1:
             self.homearm_hw.on()
         elif set_state == 0:
             # case of alarm operated via keypad
-            #if self.sysarm_hw.value == True and self.homearm_hw.value == False:
-                #self.homearm_hw.on()
-                #time.sleep(0.5)
-                #self.homearm_hw.off()
-            #else:
+            # if self.sysarm_hw.value == True and self.homearm_hw.value == False:
+            # self.homearm_hw.on()
+            # time.sleep(0.5)
+            # self.homearm_hw.off()
+            # else:
             self.homearm_hw.off()
 
-    def disarm (self):
+    def disarm(self):
         if self.sysarm_hw.value == True:
             if self.fullarm_hw.value == True:
                 self.fullarm_cb(0)
@@ -118,59 +119,55 @@ class GPIOMonitor:
                 self.fullarm_cb(1)
                 time.sleep(0.2)
                 self.fullarm_cb(0)
-                
+
 
 class MQTTnotify:
-    def __init__(self, mqtt_server='iot.eclipse.org'):
-        # following lines as must in every class that ment to use MQTT_class
-        self.mqtt = MQTTClient(topic='/HomePi/Dvir/AlarmSys', topic_qos=0, host='iot.eclipse.org')
+    def __init__(self, sub_topic, msg_topic, mqtt_server='iot.eclipse.org'):
+        self.msg_topic = msg_topic
+        self.mqtt = MQTTClient(topic=sub_topic, topic_qos=0, host=mqtt_server)
         self.mqtt.call_externalf = lambda: self.commands(self.mqtt.arrived_msg)
         self.mqtt.start()
         time.sleep(1)
-        self.mqtt.pub(topic='/HomePi/Dvir/Messages',payload='AlarmSys in ON and monitoring')
+
+    def startup_notify(self):
+        self.mqtt.pub(topic=self.msg_topic, payload='AlarmSys in ON and monitoring')
 
     def commands(self, mqtt_msg):
-        if mqtt_msg.lower() == 'log':
+        if mqtt_msg.lower() == 'info':
+            self.mqtt.pub(topic=self.msg_topic, payload='Applicable commads:\n1)log\n2)status\n3)disarm\n4)full_arm\n5) home_arm')
+        elif mqtt_msg.lower() == 'log':
             t_log = XTractLastLogEvent('/home/guy/github/Alarm/AlarmMonitor.log')
-            self.mqtt.pub(topic='/HomePi/Dvir/Messages',payload=t_log.xport_chopped_log())#A.get_status())
+            self.mqtt.pub(topic=self.msg_topic, payload=t_log.xport_chopped_log())
         elif mqtt_msg.lower() == 'status':
             t_log = XTractLastLogEvent('/home/guy/github/Alarm/AlarmMonitor.log')
-            self.mqtt.pub(topic='/HomePi/Dvir/Messages',payload=A.get_status())
+            self.mqtt.pub(topic=self.msg_topic, payload=A.get_status())
         elif mqtt_msg.lower() == 'disarm':
-            self.mqtt.pub(topic='/HomePi/Dvir/Messages',payload='Disarmed')
+            self.mqtt.pub(topic=self.msg_topic, payload='Disarmed')
             A.disarm()
             time.sleep(0.5)
-            if A.sysarm_hw.value == False:
+            if A.sysarm_hw.value is False:
                 A.notify('System disarmed')
             else:
                 A.notify('System failed to disarm')
         elif mqtt_msg.lower() == 'full_arm':
-            self.mqtt.pub(topic='/HomePi/Dvir/Messages',payload='full mode armed')
+            self.mqtt.pub(topic=self.msg_topic, payload='full mode armed')
             A.fullarm_cb(1)
             time.sleep(0.5)
-            if A.sysarm_hw.value == True:
+            if A.sysarm_hw.value is True:
                 A.notify('System Full armed')
             else:
                 A.notify('System failed to arm')
         elif mqtt_msg.lower() == 'home_arm':
-            self.mqtt.pub(topic='/HomePi/Dvir/Messages',payload='home mode armed')
+            self.mqtt.pub(topic=self.msg_topic, payload='home mode armed')
             A.homearm_cb(1)
             time.sleep(0.5)
-            if A.sysarm_hw.value == True:
+            if A.sysarm_hw.value is True:
                 A.notify('System Home armed')
             else:
                 A.notify('System failed to arm')
 
 
-os_type = platform
-if os_type == 'darwin':
-    main_path = '/Users/guy/Documents/github/Rpi/'
-elif os_type == 'win32':
-    main_path = 'd:/users/guydvir/Documents/git/Rpi/'
-elif os_type == 'linux':
-    main_path = '/home/guy/Documents/github/Rpi/'
-    main_path = '/home/guy/github/'
-
+main_path = '/home/guy/github/'
 path.append(main_path + 'LocalSwitch')
 path.append(main_path + 'RemoteSwitch')
 path.append(main_path + 'modules')
@@ -180,5 +177,5 @@ from localswitches import Log2File, XTractLastLogEvent
 import getip
 import cbit
 
-A=GPIOMonitor(ip='192.168.2.117')
-B=MQTTnotify()
+A = GPIOMonitor(ip='192.168.2.117')
+B = MQTTnotify(sub_topic='/HomePi/Dvir/AlarmSys', msg_topic='/HomePi/Dvir/Messages', mqtt_server='iot.eclipse.org')
