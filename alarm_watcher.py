@@ -10,15 +10,15 @@ class GPIOMonitor:
                  log_filepath=''):
         # listen_pins = [sys.arm, alarm.on], trigger_pins=[full, home]
         self.factory = None
-        self.log_filename = log_filepath+'AlarmMonitor.log'
+        self.log_filename = log_filepath + 'AlarmMonitor.log'
         self.last_state = [None for i in range(4)]
         self.cbit = cbit.CBit(1000)
 
-		# operated from remote,but ip belongs to AlarmSys
+        # operated from remote,but ip belongs to AlarmSys
         if ip is not None or ip != getip.get_ip()[0]:
             self.factory = PiGPIOFactory(host=ip)
             self.ip_pi = ip
-		# case or run localy at AlarmSys
+        # case or run localy at AlarmSys
         else:
             self.ip_pi = getip.get_ip()[0]
 
@@ -32,7 +32,7 @@ class GPIOMonitor:
                                time_in_log=1, screen=1)
 
         self.check_state_on_boot(trigger_pins, listen_pins)
-        self.notify('logfile: %s'% self.log_filename)
+        self.notify('logfile: %s' % self.log_filename)
 
         self.monitor_state()
 
@@ -126,7 +126,8 @@ class MQTTnotify:
 
     def commands(self, mqtt_msg):
         if mqtt_msg.lower() == 'info' or mqtt_msg == '5':
-            self.mqtt.pub(topic=self.msg_topic, payload='Applicable commands:\n***********************\n0) disarm\n1) full_arm\n2) home_arm\n3) status\n4) log\n5) info')
+            self.mqtt.pub(topic=self.msg_topic,
+                          payload='Applicable commands:\n***********************\n0) disarm\n1) full_arm\n2) home_arm\n3) status\n4) log\n5) info')
         elif mqtt_msg.lower() == 'log' or mqtt_msg == '4':
             t_log = XTractLastLogEvent(A.log_filename)
             self.mqtt.pub(topic=self.msg_topic, payload=t_log.xport_chopped_log())
@@ -168,5 +169,5 @@ from localswitches import Log2File, XTractLastLogEvent
 import getip
 import cbit
 
-A = GPIOMonitor(ip='192.168.2.117', log_filepath=MAIN_PATH+'Alarm/')
+A = GPIOMonitor(ip='192.168.2.117', log_filepath=MAIN_PATH + 'Alarm/')
 B = MQTTnotify(sub_topic='/HomePi/Dvir/AlarmSys', msg_topic='/HomePi/Dvir/Messages', mqtt_server='iot.eclipse.org')
