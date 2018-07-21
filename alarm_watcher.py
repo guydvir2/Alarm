@@ -78,7 +78,7 @@ class GPIOMonitor:
         self.notify("trigger IOs [%d, %d]" % (trigger_pins[0], trigger_pins[1]))
         self.notify("Indications IOs [%d, %d]" % (listen_pins[0], listen_pins[1]))
 
-        if any([self.homearm_hw.value, self.fullarm_hw.value]):
+        if self.sysarm_hw.value is True:  #any([self.homearm_hw.value, self.fullarm_hw.value, ]):
             al_stat = '@BOOT- System Armed'
         else:
             al_stat = '@Boot -System Unarmed'
