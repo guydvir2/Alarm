@@ -2,6 +2,7 @@ from gpiozero import Button, OutputDevice
 from gpiozero.pins.pigpio import PiGPIOFactory
 from sys import platform, path
 import time
+import datetime
 
 
 class GPIOMonitor:
@@ -37,6 +38,7 @@ class GPIOMonitor:
         self.monitor_state()
 
     def monitor_state(self):
+        self.fullarm_hw.off()
         def const_check_state():
             tmp_status = self.fullarm_hw.value, self.homearm_hw.value, self.sysarm_hw.value, self.alarm_hw.value
             if tmp_status != self.last_state:
@@ -44,6 +46,7 @@ class GPIOMonitor:
                     if self.last_state[i] != current_gpio:
                         self.last_state[i] = current_gpio
                         self.notify('[%s] :%s' % (msgs[i], current_gpio))
+            print(tmp_status)
 
         msgs = ['Full-mode Arm', 'Home-mode', 'System Arm state', 'Alarm state']
 
@@ -66,10 +69,10 @@ class GPIOMonitor:
         if self.alarm_hw.value == True:
             msg = 'System is in ALARM MODE'
         return msg
-        tmp_status = [str(self.fullarm_hw.value), str(self.homearm_hw.value), str(self.sysarm_hw.value),
-                      str(self.alarm_hw.value)]
-        print(tmp_status)
-        return 1
+        #tmp_status = [str(self.fullarm_hw.value), str(self.homearm_hw.value), str(self.sysarm_hw.value),
+                      #str(self.alarm_hw.value)]
+        #print(tmp_status)
+        #return 1
 
     def check_state_on_boot(self, trigger_pins, listen_pins):
         # check triggers at boot
@@ -91,12 +94,14 @@ class GPIOMonitor:
     def fullarm_cb(self, set_state):
         if set_state == 1:
             self.fullarm_hw.on()
+            print("FULLON")
         elif set_state == 0:
             self.fullarm_hw.off()
 
     def homearm_cb(self, set_state):
         if set_state == 1:
             self.homearm_hw.on()
+            print("HOMEON")
         elif set_state == 0:
             hw.off()
             self.homearm_hw.off()
@@ -160,7 +165,7 @@ class MQTTnotify:
 
 
 MAIN_PATH = '/home/guy/github/'
-path.append(MAIN_PATH + 'LocalSwitch')
+path.append(MAIN_PATH + 'LocalSwitch/main')
 path.append(MAIN_PATH + 'RemoteSwitch')
 path.append(MAIN_PATH + 'modules')
 
@@ -169,5 +174,40 @@ from localswitches import Log2File, XTractLastLogEvent
 import getip
 import cbit
 
-A = GPIOMonitor(ip='192.168.2.117', log_filepath=MAIN_PATH + 'Alarm/')
-B = MQTTnotify(sub_topic='/HomePi/Dvir/AlarmSys', msg_topic='/HomePi/Dvir/Messages', mqtt_server='iot.eclipse.org')
+def start_mqtt_service():
+    global MQTT_Client
+    MQTT_Client = MQTTClient(topics=['HomePi/Dvir/AlarmSystem'], topic_qos=0, host='192.168.2.113')
+    MQTT_Client.call_externalf = lambda: mqtt_commands(MQTT_Client.arrived_msg)
+    MQTT_Client.start()
+    time.sleep(1)
+    pub_msg(msg='System Boot')
+    
+def mqtt_commands(msg):
+    global alarmsys_monitor
+    if msg.upper() == 'HOME':
+        alarmsys_monitor.homearm_cb(1)
+        pub_msg('Home mode armed')
+    elif msg.upper() == 'FULL':
+        alarmsys_monitor.fullarm_cb(1)
+        pub_msg('Full mode armed')
+    elif msg.upper() == 'DOWN':
+        lalarmsys_monitor.disarm()
+        pub_msg('Disarmed')
+    elif msg.upper() == 'STATUS':
+        pub_msg(alarmsys_monitor.get_status())
+    else:
+        pass
+
+
+def pub_msg(msg):
+    global MQTT_Client
+    msg_topic='HomePi/Dvir/Messages'
+    device_name='AlarmSystem'
+    time_stamp = '[' + str(datetime.datetime.now())[:-5] + ']'
+    MQTT_Client.pub(payload='%s [%s] %s' % (time_stamp, device_name, msg), topic=msg_topic)
+    
+
+
+alarmsys_monitor = GPIOMonitor(ip='192.168.2.113', log_filepath=MAIN_PATH + 'Alarm/')
+start_mqtt_service()
+#B = MQTTnotify(sub_topic='HomePi/Dvir/AlarmSys', msg_topic='HomePi/Dvir/Messages', mqtt_server='iot.eclipse.org')

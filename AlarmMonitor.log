@@ -103,3 +103,357 @@ log start @lab_pi, IP:192.168.2.113, OS:linux, Name:HomePi-AlarmSys monitor
 [2018-07-21 23:24:21.1] [Home-mode] :False
 [2018-07-21 23:24:21.1] [System Arm state] :True
 [2018-07-21 23:24:21.1] [Alarm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:HomePi-AlarmSys monitor
+****************************************************************************
+[2018-08-06 03:33:07.0] HomePi-AlarmSys monitor start
+[2018-08-06 03:33:07.0] IP [192.168.2.113]
+[2018-08-06 03:33:07.0] trigger IOs [16, 26]
+[2018-08-06 03:33:07.0] Indications IOs [21, 20]
+[2018-08-06 03:33:07.0] @Boot -System Unarmed
+[2018-08-06 03:33:07.0] logfile: /home/guy/github/Alarm/AlarmMonitor.log
+[2018-08-06 03:33:07.0] [Full-mode Arm] :False
+[2018-08-06 03:33:07.0] [Home-mode] :False
+[2018-08-06 03:33:07.0] [System Arm state] :False
+[2018-08-06 03:33:07.0] [Alarm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:HomePi-AlarmSys monitor
+****************************************************************************
+[2018-08-06 03:47:28.1] HomePi-AlarmSys monitor start
+[2018-08-06 03:47:28.1] IP [192.168.2.113]
+[2018-08-06 03:47:28.1] trigger IOs [16, 26]
+[2018-08-06 03:47:28.1] Indications IOs [21, 20]
+[2018-08-06 03:47:28.1] @Boot -System Unarmed
+[2018-08-06 03:47:28.1] logfile: /home/guy/github/Alarm/AlarmMonitor.log
+[2018-08-06 03:47:28.1] [Full-mode Arm] :False
+[2018-08-06 03:47:28.1] [Home-mode] :False
+[2018-08-06 03:47:28.1] [System Arm state] :False
+[2018-08-06 03:47:28.1] [Alarm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:HomePi-AlarmSys monitor
+****************************************************************************
+[2018-08-06 03:50:37.6] HomePi-AlarmSys monitor start
+[2018-08-06 03:50:37.6] IP [192.168.2.113]
+[2018-08-06 03:50:37.6] trigger IOs [16, 26]
+[2018-08-06 03:50:37.6] Indications IOs [21, 20]
+[2018-08-06 03:50:37.6] @Boot -System Unarmed
+[2018-08-06 03:50:37.6] logfile: /home/guy/github/Alarm/AlarmMonitor.log
+[2018-08-06 03:50:37.6] [Full-mode Arm] :False
+[2018-08-06 03:50:37.6] [Home-mode] :False
+[2018-08-06 03:50:37.6] [System Arm state] :False
+[2018-08-06 03:50:37.6] [Alarm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:HomePi-AlarmSys monitor
+****************************************************************************
+[2018-08-06 03:53:06.4] HomePi-AlarmSys monitor start
+[2018-08-06 03:53:06.4] IP [192.168.2.113]
+[2018-08-06 03:53:06.4] trigger IOs [16, 26]
+[2018-08-06 03:53:06.4] Indications IOs [21, 20]
+[2018-08-06 03:53:06.4] @Boot -System Unarmed
+[2018-08-06 03:53:06.4] logfile: /home/guy/github/Alarm/AlarmMonitor.log
+[2018-08-06 03:53:06.4] [Full-mode Arm] :False
+[2018-08-06 03:53:06.4] [Home-mode] :False
+[2018-08-06 03:53:06.4] [System Arm state] :False
+[2018-08-06 03:53:06.4] [Alarm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:HomePi-AlarmSys monitor
+****************************************************************************
+[2018-08-06 03:53:23.3] HomePi-AlarmSys monitor start
+[2018-08-06 03:53:23.3] IP [192.168.2.113]
+[2018-08-06 03:53:23.3] trigger IOs [16, 26]
+[2018-08-06 03:53:23.3] Indications IOs [21, 20]
+[2018-08-06 03:53:23.3] @Boot -System Unarmed
+[2018-08-06 03:53:23.3] logfile: /home/guy/github/Alarm/AlarmMonitor.log
+[2018-08-06 03:53:23.3] [Full-mode Arm] :False
+[2018-08-06 03:53:23.3] [Home-mode] :False
+[2018-08-06 03:53:23.3] [System Arm state] :False
+[2018-08-06 03:53:23.3] [Alarm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:HomePi-AlarmSys monitor
+****************************************************************************
+[2018-08-06 03:56:07.3] HomePi-AlarmSys monitor start
+[2018-08-06 03:56:07.3] IP [192.168.2.113]
+[2018-08-06 03:56:07.3] trigger IOs [16, 26]
+[2018-08-06 03:56:07.3] Indications IOs [21, 20]
+[2018-08-06 03:56:07.3] @Boot -System Unarmed
+[2018-08-06 03:56:07.3] logfile: /home/guy/github/Alarm/AlarmMonitor.log
+[2018-08-06 03:56:07.3] [Full-mode Arm] :False
+[2018-08-06 03:56:07.3] [Home-mode] :False
+[2018-08-06 03:56:07.3] [System Arm state] :False
+[2018-08-06 03:56:07.3] [Alarm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:HomePi-AlarmSys monitor
+****************************************************************************
+[2018-08-06 03:57:05.3] HomePi-AlarmSys monitor start
+[2018-08-06 03:57:05.3] IP [192.168.2.113]
+[2018-08-06 03:57:05.3] trigger IOs [16, 26]
+[2018-08-06 03:57:05.3] Indications IOs [21, 20]
+[2018-08-06 03:57:05.3] @Boot -System Unarmed
+[2018-08-06 03:57:05.3] logfile: /home/guy/github/Alarm/AlarmMonitor.log
+[2018-08-06 03:57:05.3] [Full-mode Arm] :False
+[2018-08-06 03:57:05.3] [Home-mode] :False
+[2018-08-06 03:57:05.3] [System Arm state] :False
+[2018-08-06 03:57:05.3] [Alarm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:HomePi-AlarmSys monitor
+****************************************************************************
+[2018-08-06 03:57:24.6] HomePi-AlarmSys monitor start
+[2018-08-06 03:57:24.6] IP [192.168.2.113]
+[2018-08-06 03:57:24.6] trigger IOs [16, 26]
+[2018-08-06 03:57:24.6] Indications IOs [21, 20]
+[2018-08-06 03:57:24.6] @Boot -System Unarmed
+[2018-08-06 03:57:24.6] logfile: /home/guy/github/Alarm/AlarmMonitor.log
+[2018-08-06 03:57:24.6] [Full-mode Arm] :False
+[2018-08-06 03:57:24.6] [Home-mode] :False
+[2018-08-06 03:57:24.6] [System Arm state] :False
+[2018-08-06 03:57:24.6] [Alarm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:HomePi-AlarmSys monitor
+****************************************************************************
+[2018-08-06 03:57:59.6] HomePi-AlarmSys monitor start
+[2018-08-06 03:57:59.7] IP [192.168.2.113]
+[2018-08-06 03:57:59.7] trigger IOs [16, 26]
+[2018-08-06 03:57:59.7] Indications IOs [21, 20]
+[2018-08-06 03:57:59.7] @Boot -System Unarmed
+[2018-08-06 03:57:59.7] logfile: /home/guy/github/Alarm/AlarmMonitor.log
+[2018-08-06 03:57:59.7] [Full-mode Arm] :False
+[2018-08-06 03:57:59.7] [Home-mode] :False
+[2018-08-06 03:57:59.7] [System Arm state] :False
+[2018-08-06 03:57:59.7] [Alarm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:HomePi-AlarmSys monitor
+****************************************************************************
+[2018-08-06 03:58:10.3] HomePi-AlarmSys monitor start
+[2018-08-06 03:58:10.3] IP [192.168.2.113]
+[2018-08-06 03:58:10.3] trigger IOs [16, 26]
+[2018-08-06 03:58:10.3] Indications IOs [21, 20]
+[2018-08-06 03:58:10.3] @Boot -System Unarmed
+[2018-08-06 03:58:10.3] logfile: /home/guy/github/Alarm/AlarmMonitor.log
+[2018-08-06 03:58:10.3] [Full-mode Arm] :False
+[2018-08-06 03:58:10.3] [Home-mode] :False
+[2018-08-06 03:58:10.3] [System Arm state] :False
+[2018-08-06 03:58:10.3] [Alarm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:HomePi-AlarmSys monitor
+****************************************************************************
+[2018-08-06 03:58:32.1] HomePi-AlarmSys monitor start
+[2018-08-06 03:58:32.1] IP [192.168.2.113]
+[2018-08-06 03:58:32.1] trigger IOs [16, 26]
+[2018-08-06 03:58:32.1] Indications IOs [21, 20]
+[2018-08-06 03:58:32.1] @Boot -System Unarmed
+[2018-08-06 03:58:32.1] logfile: /home/guy/github/Alarm/AlarmMonitor.log
+[2018-08-06 03:58:32.1] [Full-mode Arm] :False
+[2018-08-06 03:58:32.1] [Home-mode] :False
+[2018-08-06 03:58:32.1] [System Arm state] :False
+[2018-08-06 03:58:32.1] [Alarm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:HomePi-AlarmSys monitor
+****************************************************************************
+[2018-08-06 03:59:28.1] HomePi-AlarmSys monitor start
+[2018-08-06 03:59:28.1] IP [192.168.2.113]
+[2018-08-06 03:59:28.1] trigger IOs [16, 26]
+[2018-08-06 03:59:28.1] Indications IOs [21, 20]
+[2018-08-06 03:59:28.2] @Boot -System Unarmed
+[2018-08-06 03:59:28.2] logfile: /home/guy/github/Alarm/AlarmMonitor.log
+[2018-08-06 03:59:28.2] [Full-mode Arm] :False
+[2018-08-06 03:59:28.2] [Home-mode] :False
+[2018-08-06 03:59:28.2] [System Arm state] :False
+[2018-08-06 03:59:28.2] [Alarm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:HomePi-AlarmSys monitor
+****************************************************************************
+[2018-08-06 04:05:20.3] HomePi-AlarmSys monitor start
+[2018-08-06 04:05:20.3] IP [192.168.2.113]
+[2018-08-06 04:05:20.3] trigger IOs [16, 26]
+[2018-08-06 04:05:20.3] Indications IOs [21, 20]
+[2018-08-06 04:05:20.3] @Boot -System Unarmed
+[2018-08-06 04:05:20.3] logfile: /home/guy/github/Alarm/AlarmMonitor.log
+[2018-08-06 04:05:20.3] [Full-mode Arm] :False
+[2018-08-06 04:05:20.3] [Home-mode] :False
+[2018-08-06 04:05:20.3] [System Arm state] :False
+[2018-08-06 04:05:20.3] [Alarm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:HomePi-AlarmSys monitor
+****************************************************************************
+[2018-08-06 04:06:42.7] HomePi-AlarmSys monitor start
+[2018-08-06 04:06:42.7] IP [192.168.2.113]
+[2018-08-06 04:06:42.7] trigger IOs [16, 26]
+[2018-08-06 04:06:42.7] Indications IOs [21, 20]
+[2018-08-06 04:06:42.7] @Boot -System Unarmed
+[2018-08-06 04:06:42.7] logfile: /home/guy/github/Alarm/AlarmMonitor.log
+[2018-08-06 04:06:42.7] [Full-mode Arm] :False
+[2018-08-06 04:06:42.7] [Home-mode] :False
+[2018-08-06 04:06:42.7] [System Arm state] :False
+[2018-08-06 04:06:42.7] [Alarm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:HomePi-AlarmSys monitor
+****************************************************************************
+[2018-08-06 04:07:33.3] HomePi-AlarmSys monitor start
+[2018-08-06 04:07:33.3] IP [192.168.2.113]
+[2018-08-06 04:07:33.3] trigger IOs [16, 26]
+[2018-08-06 04:07:33.3] Indications IOs [21, 20]
+[2018-08-06 04:07:33.3] @Boot -System Unarmed
+[2018-08-06 04:07:33.3] logfile: /home/guy/github/Alarm/AlarmMonitor.log
+[2018-08-06 04:07:33.3] [Full-mode Arm] :False
+[2018-08-06 04:07:33.3] [Home-mode] :False
+[2018-08-06 04:07:33.3] [System Arm state] :False
+[2018-08-06 04:07:33.3] [Alarm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:HomePi-AlarmSys monitor
+****************************************************************************
+[2018-08-06 04:08:02.1] HomePi-AlarmSys monitor start
+[2018-08-06 04:08:02.1] IP [192.168.2.113]
+[2018-08-06 04:08:02.1] trigger IOs [16, 26]
+[2018-08-06 04:08:02.1] Indications IOs [21, 20]
+[2018-08-06 04:08:02.1] @Boot -System Unarmed
+[2018-08-06 04:08:02.1] logfile: /home/guy/github/Alarm/AlarmMonitor.log
+[2018-08-06 04:08:02.1] [Full-mode Arm] :False
+[2018-08-06 04:08:02.1] [Home-mode] :False
+[2018-08-06 04:08:02.1] [System Arm state] :False
+[2018-08-06 04:08:02.1] [Alarm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:HomePi-AlarmSys monitor
+****************************************************************************
+[2018-08-06 04:09:31.8] HomePi-AlarmSys monitor start
+[2018-08-06 04:09:31.8] IP [192.168.2.113]
+[2018-08-06 04:09:31.8] trigger IOs [16, 26]
+[2018-08-06 04:09:31.8] Indications IOs [21, 20]
+[2018-08-06 04:09:31.8] @Boot -System Unarmed
+[2018-08-06 04:09:31.8] logfile: /home/guy/github/Alarm/AlarmMonitor.log
+[2018-08-06 04:09:31.8] [Full-mode Arm] :False
+[2018-08-06 04:09:31.9] [Home-mode] :False
+[2018-08-06 04:09:31.9] [System Arm state] :False
+[2018-08-06 04:09:31.9] [Alarm state] :False
+[2018-08-06 04:09:38.9] [Home-mode] :True
+[2018-08-06 04:10:07.9] [Full-mode Arm] :True
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:HomePi-AlarmSys monitor
+****************************************************************************
+[2018-08-06 04:11:34.2] HomePi-AlarmSys monitor start
+[2018-08-06 04:11:34.2] IP [192.168.2.113]
+[2018-08-06 04:11:34.2] trigger IOs [16, 26]
+[2018-08-06 04:11:34.2] Indications IOs [21, 20]
+[2018-08-06 04:11:34.2] @Boot -System Unarmed
+[2018-08-06 04:11:34.2] logfile: /home/guy/github/Alarm/AlarmMonitor.log
+[2018-08-06 04:11:34.2] [Full-mode Arm] :True
+[2018-08-06 04:11:34.2] [Home-mode] :True
+[2018-08-06 04:11:34.2] [System Arm state] :False
+[2018-08-06 04:11:34.2] [Alarm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:HomePi-AlarmSys monitor
+****************************************************************************
+[2018-08-06 04:14:19.3] HomePi-AlarmSys monitor start
+[2018-08-06 04:14:19.3] IP [192.168.2.113]
+[2018-08-06 04:14:19.3] trigger IOs [16, 26]
+[2018-08-06 04:14:19.3] Indications IOs [21, 20]
+[2018-08-06 04:14:19.3] @Boot -System Unarmed
+[2018-08-06 04:14:19.3] logfile: /home/guy/github/Alarm/AlarmMonitor.log
+[2018-08-06 04:14:19.3] [Full-mode Arm] :True
+[2018-08-06 04:14:19.3] [Home-mode] :True
+[2018-08-06 04:14:19.3] [System Arm state] :False
+[2018-08-06 04:14:19.3] [Alarm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:HomePi-AlarmSys monitor
+****************************************************************************
+[2018-08-06 04:14:34.3] HomePi-AlarmSys monitor start
+[2018-08-06 04:14:34.3] IP [192.168.2.113]
+[2018-08-06 04:14:34.3] trigger IOs [16, 26]
+[2018-08-06 04:14:34.3] Indications IOs [21, 20]
+[2018-08-06 04:14:34.3] @Boot -System Unarmed
+[2018-08-06 04:14:34.3] logfile: /home/guy/github/Alarm/AlarmMonitor.log
+[2018-08-06 04:14:34.3] [Full-mode Arm] :True
+[2018-08-06 04:14:34.3] [Home-mode] :True
+[2018-08-06 04:14:34.3] [System Arm state] :False
+[2018-08-06 04:14:34.4] [Alarm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:HomePi-AlarmSys monitor
+****************************************************************************
+[2018-08-06 06:11:16.6] HomePi-AlarmSys monitor start
+[2018-08-06 06:11:16.6] IP [192.168.2.113]
+[2018-08-06 06:11:16.6] trigger IOs [16, 26]
+[2018-08-06 06:11:16.6] Indications IOs [21, 20]
+[2018-08-06 06:11:16.6] @Boot -System Unarmed
+[2018-08-06 06:11:16.6] logfile: /home/guy/github/Alarm/AlarmMonitor.log
+[2018-08-06 06:11:16.6] [Full-mode Arm] :True
+[2018-08-06 06:11:16.6] [Home-mode] :True
+[2018-08-06 06:11:16.6] [System Arm state] :False
+[2018-08-06 06:11:16.6] [Alarm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:HomePi-AlarmSys monitor
+****************************************************************************
+[2018-08-06 06:14:50.0] HomePi-AlarmSys monitor start
+[2018-08-06 06:14:50.0] IP [192.168.2.113]
+[2018-08-06 06:14:50.0] trigger IOs [16, 26]
+[2018-08-06 06:14:50.0] Indications IOs [21, 20]
+[2018-08-06 06:14:50.0] @Boot -System Unarmed
+[2018-08-06 06:14:50.0] logfile: /home/guy/github/Alarm/AlarmMonitor.log
+[2018-08-06 06:14:50.0] [Full-mode Arm] :True
+[2018-08-06 06:14:50.0] [Home-mode] :True
+[2018-08-06 06:14:50.0] [System Arm state] :False
+[2018-08-06 06:14:50.0] [Alarm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:HomePi-AlarmSys monitor
+****************************************************************************
+[2018-08-06 06:16:22.8] HomePi-AlarmSys monitor start
+[2018-08-06 06:16:22.8] IP [192.168.2.113]
+[2018-08-06 06:16:22.8] trigger IOs [16, 26]
+[2018-08-06 06:16:22.8] Indications IOs [21, 20]
+[2018-08-06 06:16:22.8] @Boot -System Unarmed
+[2018-08-06 06:16:22.8] logfile: /home/guy/github/Alarm/AlarmMonitor.log
+[2018-08-06 06:16:22.8] [Full-mode Arm] :True
+[2018-08-06 06:16:22.8] [Home-mode] :True
+[2018-08-06 06:16:22.8] [System Arm state] :False
+[2018-08-06 06:16:22.8] [Alarm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:HomePi-AlarmSys monitor
+****************************************************************************
+[2018-08-06 19:08:54.5] HomePi-AlarmSys monitor start
+[2018-08-06 19:08:54.5] IP [192.168.2.113]
+[2018-08-06 19:08:54.5] trigger IOs [16, 26]
+[2018-08-06 19:08:54.5] Indications IOs [21, 20]
+[2018-08-06 19:08:54.5] @Boot -System Unarmed
+[2018-08-06 19:08:54.5] logfile: /home/guy/github/Alarm/AlarmMonitor.log
+[2018-08-06 19:08:54.5] [Full-mode Arm] :True
+[2018-08-06 19:08:54.5] [Home-mode] :True
+[2018-08-06 19:08:54.5] [System Arm state] :False
+[2018-08-06 19:08:54.5] [Alarm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:HomePi-AlarmSys monitor
+****************************************************************************
+[2018-08-06 19:11:54.9] HomePi-AlarmSys monitor start
+[2018-08-06 19:11:54.9] IP [192.168.2.113]
+[2018-08-06 19:11:54.9] trigger IOs [16, 26]
+[2018-08-06 19:11:54.9] Indications IOs [21, 20]
+[2018-08-06 19:11:54.9] @Boot -System Unarmed
+[2018-08-06 19:11:54.9] logfile: /home/guy/github/Alarm/AlarmMonitor.log
+[2018-08-06 19:11:54.9] [Full-mode Arm] :True
+[2018-08-06 19:11:54.9] [Home-mode] :True
+[2018-08-06 19:11:54.9] [System Arm state] :False
+[2018-08-06 19:11:54.9] [Alarm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:HomePi-AlarmSys monitor
+****************************************************************************
+[2018-08-06 19:12:19.2] HomePi-AlarmSys monitor start
+[2018-08-06 19:12:19.2] IP [192.168.2.113]
+[2018-08-06 19:12:19.2] trigger IOs [16, 26]
+[2018-08-06 19:12:19.2] Indications IOs [21, 20]
+[2018-08-06 19:12:19.2] @Boot -System Unarmed
+[2018-08-06 19:12:19.2] logfile: /home/guy/github/Alarm/AlarmMonitor.log
+[2018-08-06 19:12:19.2] [Full-mode Arm] :False
+[2018-08-06 19:12:19.2] [Home-mode] :True
+[2018-08-06 19:12:19.2] [System Arm state] :False
+[2018-08-06 19:12:19.2] [Alarm state] :False
+
+log start @lab_pi, IP:192.168.2.113, OS:linux, Name:HomePi-AlarmSys monitor
+****************************************************************************
+[2018-08-06 19:12:48.6] HomePi-AlarmSys monitor start
+[2018-08-06 19:12:48.6] IP [192.168.2.113]
+[2018-08-06 19:12:48.6] trigger IOs [16, 26]
+[2018-08-06 19:12:48.6] Indications IOs [21, 20]
+[2018-08-06 19:12:48.6] @Boot -System Unarmed
+[2018-08-06 19:12:48.6] logfile: /home/guy/github/Alarm/AlarmMonitor.log
+[2018-08-06 19:12:48.6] [Full-mode Arm] :False
+[2018-08-06 19:12:48.6] [Home-mode] :True
+[2018-08-06 19:12:48.6] [System Arm state] :False
+[2018-08-06 19:12:48.6] [Alarm state] :False
+[2018-08-06 19:12:52.6] [Full-mode Arm] :True
