@@ -1,5 +1,5 @@
 from gpiozero import Button, OutputDevice
-from gpiozero.pins.pigpio import PiGPIOFactory
+#from gpiozero.pins.pigpio import PiGPIOFactory
 from sys import platform, path
 import time
 import datetime
@@ -16,7 +16,7 @@ class GPIOMonitor:
         self.cbit = cbit.CBit(1000)
 
         # operated from remote,but ip belongs to AlarmSys
-        if ip is not None or ip != getip.get_ip()[0]:
+        if ip is not None and ip != getip.get_ip()[0]:
             self.factory = PiGPIOFactory(host=ip)
             self.ip_pi = ip
         # case or run localy at AlarmSys
@@ -38,7 +38,7 @@ class GPIOMonitor:
         self.monitor_state()
 
     def monitor_state(self):
-        self.fullarm_hw.off()
+        #self.fullarm_hw.off()
         def const_check_state():
             tmp_status = self.fullarm_hw.value, self.homearm_hw.value, self.sysarm_hw.value, self.alarm_hw.value
             if tmp_status != self.last_state:
@@ -46,9 +46,9 @@ class GPIOMonitor:
                     if self.last_state[i] != current_gpio:
                         self.last_state[i] = current_gpio
                         self.notify('[%s] :%s' % (msgs[i], current_gpio))
-            print(tmp_status)
+            #print(tmp_status)
 
-        msgs = ['Full-mode Arm', 'Home-mode', 'System Arm state', 'Alarm state']
+        msgs = ['Full-mode Arm', 'Home-mode Arm', 'System Arm state', 'Alarm state']
 
         self.cbit.append_process(const_check_state)
         self.cbit.init_thread()
@@ -56,6 +56,7 @@ class GPIOMonitor:
     def get_status(self):
         msg = 'Empty'
         # print(self.sysarm_hw.value)
+        return ('%s, %s, %s,%s'%(self.fullarm_hw.value, self.homearm_hw.value, self.sysarm_hw.value, self.alarm_hw.value))
         if self.sysarm_hw.value == True:
             if self.fullarm_hw.value == True:
                 msg = 'System armed - Full Mode'
@@ -94,16 +95,13 @@ class GPIOMonitor:
     def fullarm_cb(self, set_state):
         if set_state == 1:
             self.fullarm_hw.on()
-            print("FULLON")
         elif set_state == 0:
             self.fullarm_hw.off()
 
     def homearm_cb(self, set_state):
         if set_state == 1:
-            self.homearm_hw.on()
-            print("HOMEON")
+            self.homearm_hw.on() 
         elif set_state == 0:
-            hw.off()
             self.homearm_hw.off()
 
     def disarm(self):
@@ -116,6 +114,9 @@ class GPIOMonitor:
                 self.fullarm_cb(1)
                 time.sleep(0.2)
                 self.fullarm_cb(0)
+                self.homearm_cb(1)
+                time.sleep(0.2)
+                self.homearm_cb(0)
 
 
 class MQTTnotify:
@@ -190,8 +191,8 @@ def mqtt_commands(msg):
     elif msg.upper() == 'FULL':
         alarmsys_monitor.fullarm_cb(1)
         pub_msg('Full mode armed')
-    elif msg.upper() == 'DOWN':
-        lalarmsys_monitor.disarm()
+    elif msg.upper() == 'DISARM':
+        alarmsys_monitor.disarm()
         pub_msg('Disarmed')
     elif msg.upper() == 'STATUS':
         pub_msg(alarmsys_monitor.get_status())
@@ -208,6 +209,5 @@ def pub_msg(msg):
     
 
 
-alarmsys_monitor = GPIOMonitor(ip='192.168.2.113', log_filepath=MAIN_PATH + 'Alarm/')
+alarmsys_monitor = GPIOMonitor(ip=None, log_filepath=MAIN_PATH + 'Alarm/')
 start_mqtt_service()
-#B = MQTTnotify(sub_topic='HomePi/Dvir/AlarmSys', msg_topic='HomePi/Dvir/Messages', mqtt_server='iot.eclipse.org')
