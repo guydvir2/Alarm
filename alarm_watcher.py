@@ -184,7 +184,7 @@ class GPIOMonitor(Thread):
 
     def alert(self, msg):
         self.pub_msg(msg=msg, topic=self.alert_topic)
-        self.telegram_bot.send_msg(msg)
+        # self.telegram_bot.send_msg(msg)
 
 
 # ############ Parameters ###############################
