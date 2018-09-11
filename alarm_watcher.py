@@ -26,17 +26,13 @@ class GPIOMonitor(Thread):
                  username=None, password=None):
         # listen_pins = [sys.arm, alarm.on], trigger_pins=[full, home]
 
-        Thread.__init__(self)
-
-        self.mqtt_client = MQTTClient(sid='alarm_mqtt', topics=[device_topic, group_topics], topic_qos=qos, host=broker,
-                                      username=username, password=password)
-        self.telegram_bot = TelegramBot()
-
+        # ## MQTT
         self.alert_topic = alert_topic
         self.msg_topic = msg_topic
         self.device_topic = device_topic
-        self.start_mqtt_service()
-        self.start_telegram_service()
+        # ##
+
+        # ## GPIO
         self.factory = None
         self.fullarm_hw = None
         self.homearm_hw = None
@@ -45,6 +41,7 @@ class GPIOMonitor(Thread):
         self.alias = alias
         self.log_filename = log_filepath + 'AlarmMonitor.log'
         self.last_state = [None for i in range(4)]
+        # ##
 
         # operated from remote,but ip belongs to AlarmSys
         if ip is not None and ip != getip.get_ip()[0]:
@@ -54,9 +51,18 @@ class GPIOMonitor(Thread):
         else:
             self.ip_pi = getip.get_ip()[0]
 
+        # ## Start Services
+        Thread.__init__(self)
+        self.mqtt_client = MQTTClient(sid='alarm_mqtt', topics=[device_topic, group_topics], topic_qos=qos,
+                                      host=broker,
+                                      username=username, password=password)
+        self.telegram_bot = TelegramBot()
+        self.start_mqtt_service()
+        self.start_telegram_service()
         self.logger = Log2File(self.log_filename, name_of_master=self.alias, time_in_log=1, screen=1)
         self.hardware_gpio(trigger_pins, listen_pins)
         self.notify('logfile: %s' % self.log_filename)
+        # ##
 
     def hardware_gpio(self, trigger_pins, listen_pins):
         self.fullarm_hw = OutputDevice(trigger_pins[0], pin_factory=self.factory, initial_value=False)
@@ -146,18 +152,14 @@ class GPIOMonitor(Thread):
         if msg.upper() == 'HOME':
             self.homearm_cb(1)
             msg1 = 'Home mode armed'
-            # self.pub_msg('Home mode armed')
         elif msg.upper() == 'FULL':
             self.fullarm_cb(1)
             msg1 = 'Full mode armed'
-            # self.pub_msg('Full mode armed')
         elif msg.upper() == 'DISARM':
             self.disarm()
             msg1 = 'Disarmed'
-            # self.pub_msg('Disarmed')
         elif msg.upper() == 'STATUS':
             msg1 = alarmsys_monitor.get_status()
-            # self.pub_msg(alarmsys_monitor.get_status())
         else:
             msg1 = "Nan"
 
@@ -167,7 +169,7 @@ class GPIOMonitor(Thread):
 
     def pub_msg(self, msg, topic=None):
         if topic is None:
-            msg_topic = 'HomePi/Dvir/Messages'
+            msg_topic = self.msg_topic
         else:
             msg_topic = topic
 
@@ -183,9 +185,7 @@ class GPIOMonitor(Thread):
 
     def alert(self, msg):
         self.pub_msg(msg=msg, topic=self.alert_topic)
-
-
-#       Future- send SMS
+        self.telegram_bot.send_msg(msg)
 
 
 # ############ Parameters ###############################
@@ -201,6 +201,7 @@ ALIAS = 'HomePi AlarmSystem Communicator'
 LISTEN_PINS = [21, 20]
 TRIGGER_PINS = [16, 26]
 LOG_FILE = '/home/guy/'
+# #######################################################
 
 alarmsys_monitor = GPIOMonitor(ip=None, listen_pins=LISTEN_PINS, trigger_pins=TRIGGER_PINS, alias=ALIAS,
                                log_filepath=LOG_FILE, device_topic=DEVICE_TOPIC, msg_topic=MSG_TOPIC,
