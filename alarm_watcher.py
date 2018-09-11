@@ -22,8 +22,8 @@ class GPIOMonitor(Thread):
                  log_filepath=''):
         Thread.__init__(self)
         self.mqtt_client = MQTTClient(self, sid='alarm_mqtt', topics=['HomePi/Dvir/AlarmSystem', 'HomePi/Dvir/All'],
-                                      topic_qos=0, host='192.168.2.200', username="guy", password="kupelu9e",
-                                      alert_topic='HomePi/Dvir/Alerts')
+                                      topic_qos=0, host='192.168.2.200', username="guy", password="kupelu9e")#,
+                                      # alert_topic='HomePi/Dvir/Alerts')
 
         # listen_pins = [sys.arm, alarm.on], trigger_pins=[full, home]
         self.factory = None
