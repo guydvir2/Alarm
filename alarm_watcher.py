@@ -62,15 +62,16 @@ class GPIOMonitor(Thread):
 
     def run(self):
         msgs = ['Full-mode Arm', 'Home-mode Arm', 'System Arm state', 'Alarm state']
-        current_status = self.fullarm_hw.value, self.homearm_hw.value, self.sysarm_hw.value, self.alarm_hw.value
-        if current_status != self.last_state:
-            for i, current_gpio in enumerate(current_status):
-                if self.last_state[i] != current_gpio:
-                    self.last_state[i] = current_gpio
-                    msg1 = '[%s] :%s' % (msgs[i], current_gpio)
-                    self.notify(msg1)
-                    if i == 3:
-                        self.alert(msg=msg1)
+        while True:
+            current_status = self.fullarm_hw.value, self.homearm_hw.value, self.sysarm_hw.value, self.alarm_hw.value
+            if current_status != self.last_state:
+                for i, current_gpio in enumerate(current_status):
+                    if self.last_state[i] != current_gpio:
+                        self.last_state[i] = current_gpio
+                        msg1 = '[%s] :%s' % (msgs[i], current_gpio)
+                        self.notify(msg1)
+                        if i == 3:
+                            self.alert(msg=msg1)
 
     def get_status(self):
         return ('Full-arm state:%s, Home-arm state:%s, System armed:%s,SystemAlarming:%s' % (
