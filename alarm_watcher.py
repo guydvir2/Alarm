@@ -56,7 +56,7 @@ class GPIOMonitor:
     def get_status(self):
         msg = 'Empty'
         # print(self.sysarm_hw.value)
-        return ('%s, %s, %s,%s'%(self.fullarm_hw.value, self.homearm_hw.value, self.sysarm_hw.value, self.alarm_hw.value))
+        return ('Full-arm state:%s, Home-arm state:%s, System armed:%s,SystemAlarming:%s'%(self.fullarm_hw.value, self.homearm_hw.value, self.sysarm_hw.value, self.alarm_hw.value))
         if self.sysarm_hw.value == True:
             if self.fullarm_hw.value == True:
                 msg = 'System armed - Full Mode'
@@ -92,13 +92,23 @@ class GPIOMonitor:
     def notify(self, msg):
         self.logger.append_log(msg)
 
-    def fullarm_cb(self, set_state):
+    def fullarm_cb(self, set_state=None):
+        if set_state is None:
+            return self.fullarm_hw.value
+        if self.homearm_cb()==1 and set_state==1:
+            self.homearm_cb(set_state=0)
+            time.sleep(2)
         if set_state == 1:
             self.fullarm_hw.on()
         elif set_state == 0:
             self.fullarm_hw.off()
 
-    def homearm_cb(self, set_state):
+    def homearm_cb(self, set_state=None):
+        if set_state is None:
+            return self.homearm_hw.value
+        if self.fullarm_cb()==1 and set_state==1:
+            self.fullarm_cb(set_state==0)
+            time.sleep(2)
         if set_state == 1:
             self.homearm_hw.on() 
         elif set_state == 0:
@@ -167,8 +177,9 @@ class MQTTnotify:
 
 MAIN_PATH = '/home/guy/github/'
 path.append(MAIN_PATH + 'LocalSwitch/main')
-path.append(MAIN_PATH + 'RemoteSwitch')
+# path.append(MAIN_PATH + 'RemoteSwitch')
 path.append(MAIN_PATH + 'modules')
+path.append(MAIN_PATH + 'MQTTswitches')
 
 from mqtt_switch import MQTTClient
 from localswitches import Log2File, XTractLastLogEvent
@@ -177,7 +188,7 @@ import cbit
 
 def start_mqtt_service():
     global MQTT_Client
-    MQTT_Client = MQTTClient(topics=['HomePi/Dvir/AlarmSystem'], topic_qos=0, host='192.168.2.113')
+    MQTT_Client = MQTTClient(sid='alarm_mqtt',topics= ['HomePi/Dvir/AlarmSystem'], topic_qos=0, host='192.168.2.200', username="guy",password="kupelu9e")
     MQTT_Client.call_externalf = lambda: mqtt_commands(MQTT_Client.arrived_msg)
     MQTT_Client.start()
     time.sleep(1)
@@ -196,6 +207,7 @@ def mqtt_commands(msg):
         pub_msg('Disarmed')
     elif msg.upper() == 'STATUS':
         pub_msg(alarmsys_monitor.get_status())
+        print("STATUS")
     else:
         pass
 
@@ -208,6 +220,6 @@ def pub_msg(msg):
     MQTT_Client.pub(payload='%s [%s] %s' % (time_stamp, device_name, msg), topic=msg_topic)
     
 
-
-alarmsys_monitor = GPIOMonitor(ip=None, log_filepath=MAIN_PATH + 'Alarm/')
 start_mqtt_service()
+alarmsys_monitor = GPIOMonitor(ip=None, log_filepath=MAIN_PATH + 'Alarm/')
+#start_mqtt_service()
