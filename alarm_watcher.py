@@ -26,8 +26,8 @@ class GPIOMonitor(Thread):
         else:
             self.ip_pi = getip.get_ip()[0]
 
-        self.hardware_gpio(trigger_pins, listen_pins)
         self.logger = Log2File(self.log_filename, name_of_master=self.alias, time_in_log=1, screen=1)
+        self.hardware_gpio(trigger_pins, listen_pins)
         self.notify('logfile: %s' % self.log_filename)
 
     def hardware_gpio(self, trigger_pins, listen_pins):
