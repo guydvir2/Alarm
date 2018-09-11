@@ -27,11 +27,10 @@ class GPIOMonitor(Thread):
         # listen_pins = [sys.arm, alarm.on], trigger_pins=[full, home]
 
         Thread.__init__(self)
-        TelegramBot.__init__(self)
 
         self.mqtt_client = MQTTClient(sid='alarm_mqtt', topics=[device_topic, group_topics], topic_qos=qos, host=broker,
                                       username=username, password=password)
-        self.telegram_bot = TelegramBot(self)
+        self.telegram_bot = TelegramBot()
 
         self.alert_topic = alert_topic
         self.msg_topic = msg_topic
@@ -177,8 +176,8 @@ class GPIOMonitor(Thread):
         self.mqtt_client.pub(payload='%s [%s] %s' % (time_stamp, device_name, msg), topic=msg_topic)
 
     def start_telegram_service(self):
-        self.telegram_bot.telbot_commands = lambda: self.mqtt_commands(self.mqtt_client.arrived_msg, origin='t')
-        self.mqtt_client.start()
+        self.telegram_bot.telbot_commands = lambda: self.mqtt_commands(self.telegram_bot.telbot_arrived_msg, origin='t')
+        self.telegram_bot.start()
         time.sleep(1)
         self.pub_msg(msg='AlarmSystem Boot')
 
