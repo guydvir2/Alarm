@@ -171,7 +171,7 @@ class GPIOMonitor(Thread):
 DEVICE_TOPIC = 'HomePi/Dvir/AlarmSystem'
 MSG_TOPIC = 'HomePi/Dvir/Messages'
 ALERT_TOPIC = 'HomePi/Dvir/Alerts'
-GROUP_TOPICS = ['HomePi/Dvir/All']
+GROUP_TOPICS = 'HomePi/Dvir/All'
 BROKER = '192.168.2.200'
 USER = "guy"
 PASSWORD = "kupelu9e"
