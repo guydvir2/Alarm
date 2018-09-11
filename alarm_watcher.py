@@ -11,10 +11,12 @@ MAIN_PATH = '/home/guy/github/'
 path.append(MAIN_PATH + 'LocalSwitch/main')
 path.append(MAIN_PATH + 'modules')
 path.append(MAIN_PATH + 'MQTTswitches')
+path.append(MAIN_PATH + 'bots')
 
 from mqtt_switch import MQTTClient
 from localswitches import Log2File, XTractLastLogEvent
 import getip
+from tbot import TelegramBot
 
 
 class GPIOMonitor(Thread):
@@ -25,12 +27,17 @@ class GPIOMonitor(Thread):
         # listen_pins = [sys.arm, alarm.on], trigger_pins=[full, home]
 
         Thread.__init__(self)
+        TelegramBot.__init__(self)
+
         self.mqtt_client = MQTTClient(sid='alarm_mqtt', topics=[device_topic, group_topics], topic_qos=qos, host=broker,
                                       username=username, password=password)
+        self.telegram_bot = TelegramBot(self)
+
         self.alert_topic = alert_topic
         self.msg_topic = msg_topic
         self.device_topic = device_topic
         self.start_mqtt_service()
+        self.start_telegram_service()
         self.factory = None
         self.fullarm_hw = None
         self.homearm_hw = None
@@ -136,20 +143,28 @@ class GPIOMonitor(Thread):
         time.sleep(1)
         self.pub_msg(msg='AlarmSystem Boot')
 
-    def mqtt_commands(self, msg):
+    def mqtt_commands(self, msg, origin=None):
         if msg.upper() == 'HOME':
             self.homearm_cb(1)
-            self.pub_msg('Home mode armed')
+            msg1 = 'Home mode armed'
+            # self.pub_msg('Home mode armed')
         elif msg.upper() == 'FULL':
             self.fullarm_cb(1)
-            self.pub_msg('Full mode armed')
+            msg1 = 'Full mode armed'
+            # self.pub_msg('Full mode armed')
         elif msg.upper() == 'DISARM':
             self.disarm()
-            self.pub_msg('Disarmed')
+            msg1 = 'Disarmed'
+            # self.pub_msg('Disarmed')
         elif msg.upper() == 'STATUS':
-            self.pub_msg(alarmsys_monitor.get_status())
+            msg1 = alarmsys_monitor.get_status()
+            # self.pub_msg(alarmsys_monitor.get_status())
         else:
-            pass
+            msg1 = "Nan"
+
+        self.pub_msg(msg1)
+        if origin == 't':
+            self.telegram_bot.send_msg(msg1)
 
     def pub_msg(self, msg, topic=None):
         if topic is None:
@@ -160,6 +175,12 @@ class GPIOMonitor(Thread):
         device_name = 'AlarmSystem'
         time_stamp = '[' + str(datetime.datetime.now())[:-4] + ']'
         self.mqtt_client.pub(payload='%s [%s] %s' % (time_stamp, device_name, msg), topic=msg_topic)
+
+    def start_telegram_service(self):
+        self.telegram_bot.telbot_commands = lambda: self.mqtt_commands(self.mqtt_client.arrived_msg, origin='t')
+        self.mqtt_client.start()
+        time.sleep(1)
+        self.pub_msg(msg='AlarmSystem Boot')
 
     def alert(self, msg):
         self.pub_msg(msg=msg, topic=self.alert_topic)
