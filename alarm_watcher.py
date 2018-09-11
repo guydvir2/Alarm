@@ -185,3 +185,4 @@ alarmsys_monitor = GPIOMonitor(ip=None, listen_pins=LISTEN_PINS, trigger_pins=TR
                                log_filepath=LOG_FILE, device_topic=DEVICE_TOPIC, msg_topic=MSG_TOPIC,
                                group_topics=GROUP_TOPICS, alert_topic=ALERT_TOPIC, broker=BROKER, username=USER,
                                password=PASSWORD, qos=QOS)
+alarmsys_monitor.start()
