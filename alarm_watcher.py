@@ -17,12 +17,14 @@ from localswitches import Log2File, XTractLastLogEvent
 import getip
 
 
-class GPIOMonitor(Thread, MQTTClient):
+class GPIOMonitor(Thread):
     def __init__(self, ip=None, alias='HomePi-AlarmSys monitor', listen_pins=[21, 20], trigger_pins=[16, 26],
                  log_filepath=''):
         Thread.__init__(self)
-        MQTTClient.__init__(self, sid='alarm_mqtt', topics=['HomePi/Dvir/AlarmSystem', 'HomePi/Dvir/All'], topic_qos=0,
-                            host='192.168.2.200', username="guy", password="kupelu9e", alert_topic='HomePi/Dvir/Alerts')
+        self.mqtt_client = MQTTClient(self, sid='alarm_mqtt', topics=['HomePi/Dvir/AlarmSystem', 'HomePi/Dvir/All'],
+                                      topic_qos=0, host='192.168.2.200', username="guy", password="kupelu9e",
+                                      alert_topic='HomePi/Dvir/Alerts')
+
         # listen_pins = [sys.arm, alarm.on], trigger_pins=[full, home]
         self.factory = None
         self.fullarm_hw = None
@@ -120,10 +122,10 @@ class GPIOMonitor(Thread, MQTTClient):
                 self.homearm_cb(0)
 
     def mqtt_service(self):
-        self.call_externalf = lambda: self.mqtt_commands(self.arrived_msg)
-        self.start()
+        self.mqtt_client.call_externalf = lambda: self.mqtt_commands(self.mqtt_client.arrived_msg)
+        self.mqtt_client.start()
         time.sleep(1)
-        pub_msg(msg='AlarmSystem Boot')
+        self.pub_msg(msg='AlarmSystem Boot')
 
     def mqtt_commands(self, msg):
         if msg.upper() == 'HOME':
@@ -144,7 +146,7 @@ class GPIOMonitor(Thread, MQTTClient):
         msg_topic = 'HomePi/Dvir/Messages'
         device_name = 'AlarmSystem'
         time_stamp = '[' + str(datetime.datetime.now())[:-4] + ']'
-        self.pub(payload='%s [%s] %s' % (time_stamp, device_name, msg), topic=msg_topic)
+        self.mqtt_client.pub(payload='%s [%s] %s' % (time_stamp, device_name, msg), topic=msg_topic)
 
 
 # def start_mqtt_service():
@@ -175,13 +177,13 @@ class GPIOMonitor(Thread, MQTTClient):
 #         pass
 
 
-def pub_msg(msg):
-    global MQTT_Client
-    msg_topic = 'HomePi/Dvir/Messages'
-    device_name = 'AlarmSystem'
-    time_stamp = '[' + str(datetime.datetime.now())[:-4] + ']'
-    MQTT_Client.pub(payload='%s [%s] %s' % (time_stamp, device_name, msg), topic=msg_topic)
+# def pub_msg(msg):
+#     global MQTT_Client
+#     msg_topic = 'HomePi/Dvir/Messages'
+#     device_name = 'AlarmSystem'
+#     time_stamp = '[' + str(datetime.datetime.now())[:-4] + ']'
+#     MQTT_Client.pub(payload='%s [%s] %s' % (time_stamp, device_name, msg), topic=msg_topic)
 
 
-start_mqtt_service()
+# start_mqtt_service()
 alarmsys_monitor = GPIOMonitor(ip=None, log_filepath=MAIN_PATH + 'Alarm/')
