@@ -19,13 +19,18 @@ import getip
 
 class GPIOMonitor(Thread):
     def __init__(self, ip=None, alias='HomePi-AlarmSys monitor', listen_pins=[21, 20], trigger_pins=[16, 26],
-                 log_filepath=''):
-        Thread.__init__(self)
-        self.mqtt_client = MQTTClient(sid='alarm_mqtt', topics=['HomePi/Dvir/AlarmSystem', 'HomePi/Dvir/All'],
-                                      topic_qos=0, host='192.168.2.200', username="guy", password="kupelu9e")#,
-                                      # alert_topic='HomePi/Dvir/Alerts')
-        self.mqtt_service()
+                 log_filepath='', device_topic=None, msg_topic=None, alert_topic=None, group_topics=None,
+                 broker='192.168.2.120', qos=0,
+                 username=None, password=None):
         # listen_pins = [sys.arm, alarm.on], trigger_pins=[full, home]
+
+        Thread.__init__(self)
+        self.mqtt_client = MQTTClient(sid='alarm_mqtt', topics=[device_topic, group_topics], topic_qos=qos, host=broker,
+                                      username=username, password=password)
+        self.alert_topic = alert_topic
+        self.msg_topic = msg_topic
+        self.device_topic = device_topic
+        self.start_mqtt_service()
         self.factory = None
         self.fullarm_hw = None
         self.homearm_hw = None
@@ -62,7 +67,10 @@ class GPIOMonitor(Thread):
             for i, current_gpio in enumerate(current_status):
                 if self.last_state[i] != current_gpio:
                     self.last_state[i] = current_gpio
-                    self.notify('[%s] :%s' % (msgs[i], current_gpio))
+                    msg1 = '[%s] :%s' % (msgs[i], current_gpio)
+                    self.notify(msg1)
+                    if i == 3:
+                        self.alert(msg=msg1)
 
     def get_status(self):
         return ('Full-arm state:%s, Home-arm state:%s, System armed:%s,SystemAlarming:%s' % (
@@ -121,7 +129,7 @@ class GPIOMonitor(Thread):
                 time.sleep(0.2)
                 self.homearm_cb(0)
 
-    def mqtt_service(self):
+    def start_mqtt_service(self):
         self.mqtt_client.call_externalf = lambda: self.mqtt_commands(self.mqtt_client.arrived_msg)
         self.mqtt_client.start()
         time.sleep(1)
@@ -143,47 +151,37 @@ class GPIOMonitor(Thread):
             pass
 
     def pub_msg(self, msg, topic=None):
-        msg_topic = 'HomePi/Dvir/Messages'
+        if topic is None:
+            msg_topic = 'HomePi/Dvir/Messages'
+        else:
+            msg_topic = topic
+
         device_name = 'AlarmSystem'
         time_stamp = '[' + str(datetime.datetime.now())[:-4] + ']'
         self.mqtt_client.pub(payload='%s [%s] %s' % (time_stamp, device_name, msg), topic=msg_topic)
 
-
-# def start_mqtt_service():
-#     global MQTT_Client
-#     MQTT_Client = MQTTClient(sid='alarm_mqtt', topics=['HomePi/Dvir/AlarmSystem', 'HomePi/Dvir/All'], topic_qos=0,
-#                              host='192.168.2.200', username="guy", password="kupelu9e", alert_topic='HomePi/Dvir/Alerts')
-#     MQTT_Client.call_externalf = lambda: mqtt_commands(MQTT_Client.arrived_msg)
-#     MQTT_Client.start()
-#     time.sleep(1)
-#     pub_msg(msg='AlarmSystem Boot')
-#
+    def alert(self, msg):
+        self.pub_msg(msg=msg, topic=self.alert_topic)
 
 
-# def mqtt_commands(msg):
-#     global alarmsys_monitor
-#     if msg.upper() == 'HOME':
-#         alarmsys_monitor.homearm_cb(1)
-#         pub_msg('Home mode armed')
-#     elif msg.upper() == 'FULL':
-#         alarmsys_monitor.fullarm_cb(1)
-#         pub_msg('Full mode armed')
-#     elif msg.upper() == 'DISARM':
-#         alarmsys_monitor.disarm()
-#         pub_msg('Disarmed')
-#     elif msg.upper() == 'STATUS':
-#         pub_msg(alarmsys_monitor.get_status())
-#     else:
-#         pass
+#       Future- send SMS
 
 
-# def pub_msg(msg):
-#     global MQTT_Client
-#     msg_topic = 'HomePi/Dvir/Messages'
-#     device_name = 'AlarmSystem'
-#     time_stamp = '[' + str(datetime.datetime.now())[:-4] + ']'
-#     MQTT_Client.pub(payload='%s [%s] %s' % (time_stamp, device_name, msg), topic=msg_topic)
+# ############ Parameters ###############################
+DEVICE_TOPIC = 'HomePi/Dvir/AlarmSystem'
+MSG_TOPIC = 'HomePi/Dvir/Messages'
+ALERT_TOPIC = 'HomePi/Dvir/Alerts'
+GROUP_TOPICS = ['HomePi/Dvir/All']
+BROKER = '192.168.2.200'
+USER = "guy"
+PASSWORD = "kupelu9e"
+QOS = 0
+ALIAS = 'HomePi AlarmSystem Communicator'
+LISTEN_PINS = [21, 20]
+TRIGGER_PINS = [16, 26]
+LOG_FILE = '/home/guy/'
 
-
-# start_mqtt_service()
-alarmsys_monitor = GPIOMonitor(ip=None, log_filepath=MAIN_PATH + 'Alarm/')
+alarmsys_monitor = GPIOMonitor(ip=None, listen_pins=LISTEN_PINS, trigger_pins=TRIGGER_PINS, alias=ALIAS,
+                               log_filepath=LOG_FILE, device_topic=DEVICE_TOPIC, msg_topic=MSG_TOPIC,
+                               group_topics=GROUP_TOPICS, alert_topic=ALERT_TOPIC, broker=BROKER, username=USER,
+                               password=PASSWORD, qos=QOS)
