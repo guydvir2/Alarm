@@ -56,6 +56,7 @@ class GPIOMonitor(Thread):
                                       host=broker,
                                       username=username, password=password)
         self.telegram_bot = TelegramBot()
+        time.sleep(1)
         self.start_mqtt_service()
         self.start_telegram_service()
         self.logger = Log2File(self.log_filename, name_of_master=self.alias, time_in_log=1, screen=1)
@@ -180,7 +181,6 @@ class GPIOMonitor(Thread):
         self.telegram_bot.telbot_commands = lambda: self.mqtt_commands(self.telegram_bot.telbot_arrived_msg, origin='t')
         self.telegram_bot.start()
         time.sleep(1)
-        self.pub_msg(msg='AlarmSystem Boot')
 
     def alert(self, msg):
         self.pub_msg(msg=msg, topic=self.alert_topic)
