@@ -46,17 +46,16 @@ class GPIOMonitor(Thread):
         if ip is not None and ip != getip.get_ip()[0]:
             self.factory = PiGPIOFactory(host=ip)
             self.ip_pi = ip
-        # case or run localy at AlarmSys
+
+        # case or run locally at AlarmSys
         else:
             self.ip_pi = getip.get_ip()[0]
 
         # ## Start Services
         Thread.__init__(self)
         self.mqtt_client = MQTTClient(sid='alarm_mqtt', topics=[device_topic, group_topics], topic_qos=qos,
-                                      host=broker,
-                                      username=username, password=password)
+                                      host=broker, username=username, password=password)
         self.telegram_bot = TelegramBot()
-        time.sleep(1)
         self.start_mqtt_service()
         self.start_telegram_service()
         self.logger = Log2File(self.log_filename, name_of_master=self.alias, time_in_log=1, screen=1)
@@ -184,7 +183,7 @@ class GPIOMonitor(Thread):
 
     def alert(self, msg):
         self.pub_msg(msg=msg, topic=self.alert_topic)
-        # self.telegram_bot.send_msg(msg)
+        self.telegram_bot.send_msg(msg)
 
 
 # ############ Parameters ###############################
