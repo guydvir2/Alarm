@@ -24,8 +24,8 @@ class GPIOMonitor:
             self.ip_pi = getip.get_ip()[0]
 
         self.alias = alias
-        self.fullarm_hw = OutputDevice(trigger_pins[0], pin_factory=self.factory, initial_value=None)
-        self.homearm_hw = OutputDevice(trigger_pins[1], pin_factory=self.factory, initial_value=None)
+        self.fullarm_hw = OutputDevice(trigger_pins[0], pin_factory=self.factory, initial_value=False)
+        self.homearm_hw = OutputDevice(trigger_pins[1], pin_factory=self.factory, initial_value=False)
         self.sysarm_hw = Button(listen_pins[0], pin_factory=self.factory)
         self.alarm_hw = Button(listen_pins[1], pin_factory=self.factory)
 
