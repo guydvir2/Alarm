@@ -22,8 +22,7 @@ from tbot import TelegramBot
 class GPIOMonitor(Thread):
     def __init__(self, ip=None, alias='HomePi-AlarmSys monitor', listen_pins=[21, 20], trigger_pins=[16, 26],
                  log_filepath='', device_topic=None, msg_topic=None, alert_topic=None, group_topics=None,
-                 broker='192.168.2.120', qos=0,
-                 username=None, password=None):
+                 broker='192.168.2.120', qos=0, username=None, password=None):
         # listen_pins = [sys.arm, alarm.on], trigger_pins=[full, home]
 
         # ## MQTT
@@ -56,7 +55,7 @@ class GPIOMonitor(Thread):
         self.mqtt_client = MQTTClient(sid='alarm_mqtt', topics=[device_topic, group_topics], topic_qos=qos,
                                       host=broker,
                                       username=username, password=password)
-        self.telegram_bot = TelegramBot()
+        self.telegram_bot = TelegramBot(welcome_msg="AlarmSystem Console - Boot")
         self.start_mqtt_service()
         self.start_telegram_service()
         self.logger = Log2File(self.log_filename, name_of_master=self.alias, time_in_log=1, screen=1)
