@@ -7,13 +7,28 @@ from sys import path
 import datetime
 from threading import Thread
 
+MAIN_PATH = '/home/guy/github/'
+path.append(MAIN_PATH + 'LocalSwitch/main')
+path.append(MAIN_PATH + 'modules')
+path.append(MAIN_PATH + 'MQTTswitches')
 
-class GPIOMonitor(Thread):
+from mqtt_switch import MQTTClient
+from localswitches import Log2File, XTractLastLogEvent
+import getip
+
+
+class GPIOMonitor(Thread, MQTTClient):
     def __init__(self, ip=None, alias='HomePi-AlarmSys monitor', listen_pins=[21, 20], trigger_pins=[16, 26],
                  log_filepath=''):
         Thread.__init__(self)
+        MQTTClient.__init__(self, sid='alarm_mqtt', topics=['HomePi/Dvir/AlarmSystem', 'HomePi/Dvir/All'], topic_qos=0,
+                            host='192.168.2.200', username="guy", password="kupelu9e", alert_topic='HomePi/Dvir/Alerts')
         # listen_pins = [sys.arm, alarm.on], trigger_pins=[full, home]
         self.factory = None
+        self.fullarm_hw = None
+        self.homearm_hw = None
+        self.sysarm_hw = None
+        self.alarm_hw = None
         self.alias = alias
         self.log_filename = log_filepath + 'AlarmMonitor.log'
         self.last_state = [None for i in range(4)]
@@ -104,44 +119,60 @@ class GPIOMonitor(Thread):
                 time.sleep(0.2)
                 self.homearm_cb(0)
 
+    def mqtt_service(self):
+        self.call_externalf = lambda: self.mqtt_commands(self.arrived_msg)
+        self.start()
+        time.sleep(1)
+        pub_msg(msg='AlarmSystem Boot')
 
-MAIN_PATH = '/home/guy/github/'
-path.append(MAIN_PATH + 'LocalSwitch/main')
-path.append(MAIN_PATH + 'modules')
-path.append(MAIN_PATH + 'MQTTswitches')
-# path.append('/Users/guy/github/SmartHome_SoC/MQTTswitches')
+    def mqtt_commands(self, msg):
+        if msg.upper() == 'HOME':
+            self.homearm_cb(1)
+            self.pub_msg('Home mode armed')
+        elif msg.upper() == 'FULL':
+            self.fullarm_cb(1)
+            self.pub_msg('Full mode armed')
+        elif msg.upper() == 'DISARM':
+            self.disarm()
+            self.pub_msg('Disarmed')
+        elif msg.upper() == 'STATUS':
+            self.pub_msg(alarmsys_monitor.get_status())
+        else:
+            pass
 
-from mqtt_switch import MQTTClient
-from localswitches import Log2File, XTractLastLogEvent
-import getip
+    def pub_msg(self, msg, topic=None):
+        msg_topic = 'HomePi/Dvir/Messages'
+        device_name = 'AlarmSystem'
+        time_stamp = '[' + str(datetime.datetime.now())[:-4] + ']'
+        self.pub(payload='%s [%s] %s' % (time_stamp, device_name, msg), topic=msg_topic)
 
 
-def start_mqtt_service():
-    global MQTT_Client
-    MQTT_Client = MQTTClient(sid='alarm_mqtt', topics=['HomePi/Dvir/AlarmSystem', 'HomePi/Dvir/All'], topic_qos=0,
-                             host='192.168.2.200',
-                             username="guy", password="kupelu9e")
-    MQTT_Client.call_externalf = lambda: mqtt_commands(MQTT_Client.arrived_msg)
-    MQTT_Client.start()
-    time.sleep(1)
-    pub_msg(msg='AlarmSystem Boot')
+# def start_mqtt_service():
+#     global MQTT_Client
+#     MQTT_Client = MQTTClient(sid='alarm_mqtt', topics=['HomePi/Dvir/AlarmSystem', 'HomePi/Dvir/All'], topic_qos=0,
+#                              host='192.168.2.200', username="guy", password="kupelu9e", alert_topic='HomePi/Dvir/Alerts')
+#     MQTT_Client.call_externalf = lambda: mqtt_commands(MQTT_Client.arrived_msg)
+#     MQTT_Client.start()
+#     time.sleep(1)
+#     pub_msg(msg='AlarmSystem Boot')
+#
 
 
-def mqtt_commands(msg):
-    global alarmsys_monitor
-    if msg.upper() == 'HOME':
-        alarmsys_monitor.homearm_cb(1)
-        pub_msg('Home mode armed')
-    elif msg.upper() == 'FULL':
-        alarmsys_monitor.fullarm_cb(1)
-        pub_msg('Full mode armed')
-    elif msg.upper() == 'DISARM':
-        alarmsys_monitor.disarm()
-        pub_msg('Disarmed')
-    elif msg.upper() == 'STATUS':
-        pub_msg(alarmsys_monitor.get_status())
-    else:
-        pass
+# def mqtt_commands(msg):
+#     global alarmsys_monitor
+#     if msg.upper() == 'HOME':
+#         alarmsys_monitor.homearm_cb(1)
+#         pub_msg('Home mode armed')
+#     elif msg.upper() == 'FULL':
+#         alarmsys_monitor.fullarm_cb(1)
+#         pub_msg('Full mode armed')
+#     elif msg.upper() == 'DISARM':
+#         alarmsys_monitor.disarm()
+#         pub_msg('Disarmed')
+#     elif msg.upper() == 'STATUS':
+#         pub_msg(alarmsys_monitor.get_status())
+#     else:
+#         pass
 
 
 def pub_msg(msg):
