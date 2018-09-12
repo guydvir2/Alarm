@@ -1,7 +1,7 @@
 try:
     from gpiozero import Button, OutputDevice
 except:
-    pass
+    print("GPIOSHIT")
 import time
 from sys import path
 import datetime
@@ -83,6 +83,7 @@ class GPIOMonitor(Thread):
                         self.notify(msg1)
                         if i == 3:
                             self.alert(msg=msg1)
+            time.sleep(1)
 
     def get_status(self):
         return ('Full-arm state:%s, Home-arm state:%s, System armed:%s,SystemAlarming:%s' % (
