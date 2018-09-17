@@ -59,8 +59,10 @@ class GPIOMonitor(Thread):
         self.start_mqtt_service()
         self.start_telegram_service()
         self.logger = Log2File(self.log_filename, name_of_master=self.alias, time_in_log=1, screen=1)
-        self.hardware_gpio(trigger_pins, listen_pins)
+        # self.hardware_gpio(trigger_pins, listen_pins)
         self.notify('logfile: %s' % self.log_filename)
+
+        self.last_log_record = XTractLastLogEvent(self.log_filename)
         # ##
 
     def hardware_gpio(self, trigger_pins, listen_pins):
@@ -74,20 +76,38 @@ class GPIOMonitor(Thread):
     def run(self):
         msgs = ['Full-mode Arm', 'Home-mode Arm', 'System Arm state', 'Alarm state']
         while True:
-            current_status = self.fullarm_hw.value, self.homearm_hw.value, self.sysarm_hw.value, self.alarm_hw.value
-            if current_status != self.last_state:
-                for i, current_gpio in enumerate(current_status):
-                    if self.last_state[i] != current_gpio:
-                        self.last_state[i] = current_gpio
-                        msg1 = '[%s] :%s' % (msgs[i], current_gpio)
-                        self.notify(msg1)
-                        if i == 3:
-                            self.alert(msg=msg1)
+            # current_status = self.fullarm_hw.value, self.homearm_hw.value, self.sysarm_hw.value, self.alarm_hw.value
+            # if current_status != self.last_state:
+            #     for i, current_gpio in enumerate(current_status):
+            #         if self.last_state[i] != current_gpio:
+            #             self.last_state[i] = current_gpio
+            #             msg1 = '[%s] :%s' % (msgs[i], current_gpio)
+            #             self.notify(msg1)
+            #             if i == 3:
+            #                 self.alert(msg=msg1)
+            pass
             time.sleep(1)
 
     def get_status(self):
-        return ('Full-arm state:%s, Home-arm state:%s, System armed:%s,SystemAlarming:%s' % (
-            self.fullarm_hw.value, self.homearm_hw.value, self.sysarm_hw.value, self.alarm_hw.value))
+        msg = 'Empty status result'
+        if self.sysarm_hw.value is True:
+            msg = 'System is armed: '
+            if self.homearm_hw.value is True:
+                msg = msg + 'Home mode'
+            elif self.fullarm_hw.value is True:
+                msg = msg + 'Full mode'
+            else:
+                msg = msg + 'Error'
+        elif self.sysarm_hw.value is not True:
+            msg = 'System is not Armed'
+
+        if self.alarm_hw.value is True:
+            msg = 'System is ALARMING!'
+
+        return msg
+
+    def get_last_log(self):
+        pass
 
     def check_state_on_boot(self, trigger_pins, listen_pins):
         # check triggers at boot
@@ -97,9 +117,9 @@ class GPIOMonitor(Thread):
         self.notify("Indications IOs [%d, %d]" % (listen_pins[0], listen_pins[1]))
 
         if self.sysarm_hw.value is True:  # any([self.homearm_hw.value, self.fullarm_hw.value, ]):
-            al_stat = '@BOOT- System Armed'
+            al_stat = '@BOOT- System is Armed'
         else:
-            al_stat = '@Boot -System Unarmed'
+            al_stat = '@Boot -System is Unarmed'
 
         self.notify(al_stat)
 
@@ -109,38 +129,64 @@ class GPIOMonitor(Thread):
     def fullarm_cb(self, set_state=None):
         if set_state is None:
             return self.fullarm_hw.value
-        if self.homearm_cb() == 1 and set_state == 1:
-            self.homearm_cb(set_state=0)
-            time.sleep(2)
+
         if set_state == 1:
-            self.fullarm_hw.on()
+            if self.homearm_cb() == 0:
+                self.fullarm_hw.on()
+                self.notify("System Switched to Full-arm [ON]")
+                return 1
+            elif self.homearm_cb() == 1:
+                self.homearm_cb(set_state=0)
+                time.sleep(2)
+                self.fullarm_hw.on()
+                self.notify("System Switched to Full-arm [ON]")
+                return 1
+
         elif set_state == 0:
             self.fullarm_hw.off()
+            self.notify("System Switched to Full-arm [OFF]")
+            return 0
 
     def homearm_cb(self, set_state=None):
         if set_state is None:
             return self.homearm_hw.value
-        if self.fullarm_cb() == 1 and set_state == 1:
-            self.fullarm_cb(set_state == 0)
-            time.sleep(2)
+
         if set_state == 1:
-            self.homearm_hw.on()
+            if self.fullarm_cb() == 1:
+                self.fullarm_cb(set_state=0)
+                time.sleep(2)
+                self.homearm_hw.on()
+                self.notify("System Switched to Home-arm [ON]")
+
+            elif self.fullarm_cb() == 0:
+                self.homearm_hw.on()
+                self.notify("System Switched to Home-arm [ON]")
+
         elif set_state == 0:
             self.homearm_hw.off()
+            self.notify("System Switched to Home-arm [OFF]")
 
     def disarm(self):
-        if self.sysarm_hw.value == True:
-            if self.fullarm_hw.value == True:
-                self.fullarm_cb(0)
-            elif self.homearm_hw.value == True:
-                self.homearm_cb(0)
-            else:
-                self.fullarm_cb(1)
-                time.sleep(0.2)
-                self.fullarm_cb(0)
-                self.homearm_cb(1)
-                time.sleep(0.2)
-                self.homearm_cb(0)
+        if self.sysarm_hw.value is True:
+            if self.fullarm_hw.value is True:
+                self.fullarm_cb(set_state=0)
+            if self.homearm_hw.value is True:
+                self.homearm_cb(set_state=0)
+
+        # verify in case system stucked in armed state
+        time.sleep(1)
+        if self.sysarm_hw.value is True:
+            self.fullarm_cb(1)
+            time.sleep(0.2)
+            self.fullarm_cb(0)
+            self.homearm_cb(1)
+            time.sleep(0.2)
+            self.homearm_cb(0)
+
+        if self.sysarm_hw.value is False and self.fullarm_hw.value is False and self.homearm_hw.value is False:
+            self.notify("System failed to disarm")
+            self.alert("System failed to disarm")
+            return 0
 
     def start_mqtt_service(self):
         self.mqtt_client.call_externalf = lambda: self.mqtt_commands(self.mqtt_client.arrived_msg)
@@ -150,14 +196,18 @@ class GPIOMonitor(Thread):
 
     def mqtt_commands(self, msg, origin=None):
         if msg.upper() == 'HOME':
-            self.homearm_cb(1)
-            msg1 = 'Home mode armed'
+            if self.homearm_cb(1) == 1:
+                msg1 = 'Home mode armed'
+            else:
+                msg1 = "failed switching to Home arm"
         elif msg.upper() == 'FULL':
-            self.fullarm_cb(1)
-            msg1 = 'Full mode armed'
+            if self.fullarm_cb(1) == 1:
+                msg1 = 'Full mode armed'
+            msg1 = "failed switching to Full arm"
         elif msg.upper() == 'DISARM':
-            self.disarm()
-            msg1 = 'Disarmed'
+            if self.disarm() != 0:
+                msg1 = 'Disarmed'
+            msg1 = "failed to disarmed"
         elif msg.upper() == 'STATUS':
             msg1 = alarmsys_monitor.get_status()
         else:
