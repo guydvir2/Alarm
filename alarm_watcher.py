@@ -106,9 +106,6 @@ class GPIOMonitor(Thread):
 
         return msg
 
-    def get_last_log(self):
-        pass
-
     def check_state_on_boot(self, trigger_pins, listen_pins):
         # check triggers at boot
         self.notify("%s start" % self.alias)
@@ -188,6 +185,11 @@ class GPIOMonitor(Thread):
             self.alert("System failed to disarm")
             return 0
 
+    def xport_last_log(self):
+        if self.last_log_record == 1:
+            self.last_log_record.read_logfile()
+            return self.last_log_record.xport_chopped_log()
+
     def start_mqtt_service(self):
         self.mqtt_client.call_externalf = lambda: self.mqtt_commands(self.mqtt_client.arrived_msg)
         self.mqtt_client.start()
@@ -209,7 +211,10 @@ class GPIOMonitor(Thread):
                 msg1 = 'Disarmed'
             msg1 = "failed to disarmed"
         elif msg.upper() == 'STATUS':
-            msg1 = alarmsys_monitor.get_status()
+            msg1 = self.get_status()
+
+        elif msg.upper() == 'LOG':
+            msg1 = self.xport_last_log()
         else:
             msg1 = "Nan"
 
