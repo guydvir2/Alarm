@@ -38,9 +38,14 @@ class GPIOMonitor(Thread):
         self.homearm_hw = None
         self.sysarm_hw = None
         self.alarm_hw = None
+        # ##
+
         self.alias = alias
         self.log_filename = log_filepath + 'AlarmMonitor.log'
-        self.last_state = [None for i in range(4)]
+        self.last_state = [None, None, None, None]
+        self.alarm_on_flag = False
+        self.alarm_start_time = None
+
         # ##
 
         # operated from remote,but ip belongs to AlarmSys
@@ -60,6 +65,7 @@ class GPIOMonitor(Thread):
         self.start_mqtt_service()
         self.start_telegram_service()
         self.logger = Log2File(self.log_filename, name_of_master=self.alias, time_in_log=1, screen=1)
+        self.last_log_record = None  # define below
         self.hardware_gpio(trigger_pins, listen_pins)
         self.notify('logfile: [%s]' % self.log_filename)
         # ##
@@ -75,6 +81,7 @@ class GPIOMonitor(Thread):
     def run(self):
         self.alert(msg="AlarmSystem started")
         msgs = ['Full-mode Arm', 'Home-mode Arm', 'System Arm state', 'Alarm state']
+
         while True:
             current_status = [self.fullarm_hw.value, self.homearm_hw.value, self.sysarm_hw.value, self.alarm_hw.value]
             if current_status != self.last_state:
@@ -82,9 +89,16 @@ class GPIOMonitor(Thread):
                     if self.last_state[i] != current_gpio:
                         msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
                         self.notify(msg1)
-                        if i == 3 and self.last_state[i] is not None:
-                            self.alert(msg=msg1)
                     self.last_state[i] = current_gpio
+
+                if current_status[3] is True:
+                    if self.alarm_start_time is None:
+                        self.alarm_start_time = time.time()
+                        self.notify(msg="System is ALARMING!", platform='mt')
+
+                elif current_status[3] is False and self.alarm_start_time is not None:
+                    self.alarm_start_time = None
+                    self.notify(msg="System stopped Alarming", platform='mt')
 
             time.sleep(1)
 
@@ -108,20 +122,28 @@ class GPIOMonitor(Thread):
 
     def check_state_on_boot(self, trigger_pins, listen_pins):
         # check triggers at boot
-        self.notify("%s start" % self.alias)
-        self.notify("IP [%s]" % self.ip_pi)
-        self.notify("trigger IOs [%d, %d]" % (trigger_pins[0], trigger_pins[1]))
-        self.notify("Indications IOs [%d, %d]" % (listen_pins[0], listen_pins[1]))
-        self.notify("MQTT topics: [%s], [%s], [%s]" % (self.device_topic, self.msg_topic, self.alert_topic))
+        self.notify(msg="%s start" % self.alias)
+        self.notify(msg="IP [%s]" % self.ip_pi)
+        self.notify(msg="trigger IOs [%d, %d]" % (trigger_pins[0], trigger_pins[1]))
+        self.notify(msg="Indications IOs [%d, %d]" % (listen_pins[0], listen_pins[1]))
+        self.notify(msg="MQTT topics: [%s], [%s], [%s]" % (self.device_topic, self.msg_topic, self.alert_topic))
         if self.sysarm_hw.value is True:
             al_stat = ' System @boot :[Armed]'
         else:
             al_stat = 'System @boot :[Unarmed]'
 
-        self.notify(al_stat)
+        self.notify(msg=al_stat)
 
-    def notify(self, msg):
+    def notify(self, msg, platform=None):
         self.logger.append_log(msg)
+
+        # choose notification platform:
+        if platform == 'm':
+            self.pub_msg(msg=msg)
+        if platform == 't':
+            self.telegram_bot.send_msg(msg)
+        if platform == 'mt' or platform == 'tm':
+            self.alert(msg)
 
     def fullarm_cb(self, set_state=None):
         if set_state is None:
@@ -130,18 +152,18 @@ class GPIOMonitor(Thread):
         if set_state == 1:
             if self.homearm_cb() == 0:
                 self.fullarm_hw.on()
-                self.notify("Remote CMD: Full-arm [ON]")
+                self.notify(msg="Remote CMD: Full-arm [ON]")  # , platform='mt')
                 return 1
             elif self.homearm_cb() == 1:
                 self.homearm_cb(set_state=0)
                 time.sleep(2)
                 self.fullarm_hw.on()
-                self.notify("Remote CMD: Full-arm [ON]")
+                self.notify(msg="Remote CMD: Full-arm [ON]")  # , platform='mt')
                 return 1
 
         elif set_state == 0:
             self.fullarm_hw.off()
-            self.notify("Remote CMD: Full-arm [OFF]")
+            self.notify(msg="Remote CMD: Full-arm [OFF]")  # , platform='mt')
             return 0
 
     def homearm_cb(self, set_state=None):
@@ -153,15 +175,15 @@ class GPIOMonitor(Thread):
                 self.fullarm_cb(set_state=0)
                 time.sleep(2)
                 self.homearm_hw.on()
-                self.notify("Remote CMD: Home-arm [ON]")
+                self.notify(msg="Remote CMD: Home-arm [ON]")  # , platform='mt')
 
             elif self.fullarm_cb() == 0:
                 self.homearm_hw.on()
-                self.notify("Remote CMD: Home-arm [ON]")
+                self.notify(msg="Remote CMD: Home-arm [ON]")  # , platform='mt')
 
         elif set_state == 0:
             self.homearm_hw.off()
-            self.notify("Remote CMD: Home-arm [OFF]")
+            self.notify(msg="Remote CMD: Home-arm [OFF]")  # , platform='mt')
 
     def disarm(self):
         if self.sysarm_hw.value is True:
@@ -183,12 +205,11 @@ class GPIOMonitor(Thread):
             time.sleep(0.2)
             self.homearm_cb(0)
 
-        if self.sysarm_hw.value is True:  # and (self.fullarm_hw.value is False and self.homearm_hw.value is False:
-            self.notify("Remote CMD: Disarm, fail")
-            self.alert("Remote CMD: Disarm, fail")
+        if self.sysarm_hw.value is True: # treated as an alert situation
+            self.notify(msg="Remote CMD: Disarm, fail", platform='mt')
             return 0
         else:
-            self.notify("Remote CMD: Disarm, ok")
+            self.notify(msg="Remote CMD: Disarm, ok")#, platform='mt')
             return 1
 
     def xport_last_log(self):
@@ -199,7 +220,6 @@ class GPIOMonitor(Thread):
         self.mqtt_client.call_externalf = lambda: self.mqtt_commands(self.mqtt_client.arrived_msg)
         self.mqtt_client.start()
         time.sleep(1)
-        self.pub_msg(msg='AlarmSystem Boot')
 
     def mqtt_commands(self, msg, origin=None):
         if msg.upper() == 'HOME':
@@ -207,14 +227,14 @@ class GPIOMonitor(Thread):
             if self.homearm_cb() == 1:
                 msg1 = 'System status: Home mode armed'
             else:
-                msg1 = "failed switching to Home arm"
+                msg1 = "failed arming Home mode "
 
         elif msg.upper() == 'FULL':
             self.fullarm_cb(1)
             if self.fullarm_cb() == 1:
                 msg1 = 'System status: Full mode armed'
             else:
-                msg1 = "failed switching to Full arm"
+                msg1 = "failed arming to Full mode"
 
         elif msg.upper() == 'DISARM':
             if self.disarm() == 1:
@@ -230,9 +250,11 @@ class GPIOMonitor(Thread):
         else:
             msg1 = "Nan"
 
-        self.pub_msg(msg1)
         if origin == 't':
-            self.telegram_bot.send_msg(msg1)
+            self.notify(msg=msg1, platform='t')
+        else:
+            self.notify(msg=msg1, platform='m')
+            # self.telegram_bot.send_msg(msg1)
 
     def pub_msg(self, msg, topic=None):
         if topic is None:
@@ -250,6 +272,7 @@ class GPIOMonitor(Thread):
         time.sleep(1)
 
     def alert(self, msg):
+        self.pub_msg(msg=msg)
         self.pub_msg(msg=msg, topic=self.alert_topic)
         self.telegram_bot.send_msg(msg)
 
