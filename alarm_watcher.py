@@ -236,7 +236,7 @@ class GPIOMonitor(Thread):
             else:
                 msg1 = "[Remote CMD] failed arming to Full mode"
 
-        elif msg.split(' ')[0].upper() == 'DISARM'
+        elif msg.split(' ')[0].upper() == 'DISARM':
             if msg.split(' ')[1] == self.alarm_pwd:
                 if self.disarm() == 1:
                     msg1 = '[Remote CMD] System status: Disarmed'
