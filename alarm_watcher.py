@@ -186,18 +186,31 @@ class GPIOMonitor(Thread):
             self.notify(msg="[Hardware CMD]: Home-arm [OFF]")
 
     def disarm(self):
-        if self.sysarm_hw.value is True:
+        # case 1 : armed by software ( has a relay indication )
+        if self.sysarm_hw.value is True and any([self.fullarm_hw.value, self.homearm_hw.value]):
             if self.fullarm_hw.value is True:
                 self.fullarm_cb(set_state=0)
             if self.homearm_hw.value is True:
                 self.homearm_cb(set_state=0)
 
-            if self.homearm_cb() == 0 and self.fullarm_cb() == 0:
+            # verify all is off
+            if all([self.homearm_hw.value, self.fullarm_hw.value, self.sysarm_hw.value]) is False:
+                self.notify(msg="[Hardware CMD]: Disarm, ok")
                 return 1
 
-        # verify in case system stucked in armed state
-        time.sleep(1)
-        if self.sysarm_hw.value is True:
+        # case 2: armed manually by user ( no indication by relay )
+        if self.sysarm_hw.value is True and self.fullarm_hw.value == 0 and self.homearm_hw.value == 0:
+            self.fullarm_cb(0)
+            time.sleep(1)
+            self.homearm_cb(0)
+
+            # verify
+            if all([self.homearm_hw.value, self.fullarm_hw.value, self.sysarm_hw.value]) is False:
+                self.notify(msg="[Hardware CMD]: Disarm, ok")
+                return 1
+
+        # case 3: some error
+        if any([self.homearm_hw.value, self.fullarm_hw.value, self.sysarm_hw.value]):
             self.fullarm_cb(1)
             time.sleep(0.2)
             self.fullarm_cb(0)
@@ -205,12 +218,14 @@ class GPIOMonitor(Thread):
             time.sleep(0.2)
             self.homearm_cb(0)
 
-        if self.sysarm_hw.value is True:  # treated as an alert situation
+            # verify
+            if all([self.homearm_hw.value, self.fullarm_hw.value, self.sysarm_hw.value]) is False:
+                self.notify(msg="[Hardware CMD]: Disarm, ok")
+                return 1
+
+        if any([self.homearm_hw.value, self.fullarm_hw.value, self.sysarm_hw.value]) is True:
             self.notify(msg="[Hardware CMD]: Disarm, fail", platform='mt')
             return 0
-        else:
-            self.notify(msg="[Hardware CMD]: Disarm, ok")
-            return 1
 
     def xport_last_log(self):
         self.last_log_record = XTractLastLogEvent(self.log_filename)
@@ -222,6 +237,7 @@ class GPIOMonitor(Thread):
         time.sleep(1)
 
     def mqtt_commands(self, msg, origin=None):
+
         if msg.upper() == 'HOME':
             self.homearm_cb(1)
             if self.homearm_cb() == 1:
@@ -239,14 +255,14 @@ class GPIOMonitor(Thread):
         elif msg.split(' ')[0].upper() == 'DISARM':
             try:
                 if msg.split(' ')[1] == self.alarm_pwd:
-                    if self.disarm() == 1: # case of not supplying any password :)
+                    if self.disarm() == 1:  # case of not supplying any password :)
                         msg1 = '[Remote CMD] System status: Disarmed'
                     else:
                         msg1 = "[Remote CMD] System status: failed to disarm"
                 else:
-                    msg1 = '[Remote CMD] System status: Wrong password, system is Armed'
+                    msg1 = '[Remote CMD] System status: Wrong password, system still Armed'
             except IndexError:
-                msg1 = "password missing, abort"
+                msg1 = "[Remote CMD] System status: password missing, abort"
 
         elif msg.upper() == 'STATUS':
             msg1 = self.get_status()
