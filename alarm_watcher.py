@@ -237,13 +237,16 @@ class GPIOMonitor(Thread):
                 msg1 = "[Remote CMD] failed arming to Full mode"
 
         elif msg.split(' ')[0].upper() == 'DISARM':
-            if msg.split(' ')[1] == self.alarm_pwd:
-                if self.disarm() == 1:
-                    msg1 = '[Remote CMD] System status: Disarmed'
+            try:
+                if msg.split(' ')[1] == self.alarm_pwd:
+                    if self.disarm() == 1: # case of not supplying any password :)
+                        msg1 = '[Remote CMD] System status: Disarmed'
+                    else:
+                        msg1 = "[Remote CMD] System status: failed to disarm"
                 else:
-                    msg1 = "[Remote CMD] System status: failed to disarm"
-            else:
-                msg1 = '[Remote CMD] System status: Wrong password, system is Armed'
+                    msg1 = '[Remote CMD] System status: Wrong password, system is Armed'
+            except IndexError:
+                msg1 = "password missing, abort"
 
         elif msg.upper() == 'STATUS':
             msg1 = self.get_status()
