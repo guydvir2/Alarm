@@ -111,7 +111,7 @@ class GPIOMonitor(Thread):
             elif self.fullarm_hw.value is True:
                 msg = msg + 'Full mode'
             else:
-                msg = msg + 'Error'
+                msg = msg + "Manually ( can't tell what state is it )"
         elif self.sysarm_hw.value is not True:
             msg = 'System is not Armed'
 
@@ -152,18 +152,18 @@ class GPIOMonitor(Thread):
         if set_state == 1:
             if self.homearm_cb() == 0:
                 self.fullarm_hw.on()
-                self.notify(msg="[Hardware CMD]: Full-arm [ON]")  # , platform='mt')
+                self.notify(msg="[Hardware CMD]: Full-arm [ON]")
                 return 1
             elif self.homearm_cb() == 1:
                 self.homearm_cb(set_state=0)
                 time.sleep(2)
                 self.fullarm_hw.on()
-                self.notify(msg="[Hardware CMD]: Full-arm [ON]")  # , platform='mt')
+                self.notify(msg="[Hardware CMD]: Full-arm [ON]")
                 return 1
 
         elif set_state == 0:
             self.fullarm_hw.off()
-            self.notify(msg="[Hardware CMD]: Full-arm [OFF]")  # , platform='mt')
+            self.notify(msg="[Hardware CMD]: Full-arm [OFF]")
             return 0
 
     def homearm_cb(self, set_state=None):
@@ -175,15 +175,15 @@ class GPIOMonitor(Thread):
                 self.fullarm_cb(set_state=0)
                 time.sleep(2)
                 self.homearm_hw.on()
-                self.notify(msg="[Hardware CMD]: Home-arm [ON]")  # , platform='mt')
+                self.notify(msg="[Hardware CMD]: Home-arm [ON]")
 
             elif self.fullarm_cb() == 0:
                 self.homearm_hw.on()
-                self.notify(msg="[Hardware CMD]: Home-arm [ON]")  # , platform='mt')
+                self.notify(msg="[Hardware CMD]: Home-arm [ON]")
 
         elif set_state == 0:
             self.homearm_hw.off()
-            self.notify(msg="[Hardware CMD]: Home-arm [OFF]")  # , platform='mt')
+            self.notify(msg="[Hardware CMD]: Home-arm [OFF]")
 
     def disarm(self):
         if self.sysarm_hw.value is True:
