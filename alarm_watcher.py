@@ -46,9 +46,6 @@ class GPIOMonitor(Thread):
         self.alarm_on_flag = False
         self.alarm_start_time = None
         self.alarm_pwd = "5161"
-        self.ask_disarm = False
-        self.disarm_timeout = 30  # sec
-
         # ##
 
         # operated from remote,but ip belongs to AlarmSys
@@ -100,8 +97,8 @@ class GPIOMonitor(Thread):
                         self.notify(msg="System is ALARMING!", platform='mt')
 
                 elif current_status[3] is False and self.alarm_start_time is not None:
-                    self.alarm_start_time = None
                     self.notify(msg="System stopped Alarming", platform='mt')
+                    self.alarm_start_time = None
 
             time.sleep(1)
 
@@ -239,11 +236,14 @@ class GPIOMonitor(Thread):
             else:
                 msg1 = "[Remote CMD] failed arming to Full mode"
 
-        elif msg.split(' ')[0].upper() == 'DISARM' and msg.split(' ')[1] == self.alarm_pwd:
-            if self.disarm() == 1:
-                msg1 = '[Remote CMD] System status: Disarmed'
+        elif msg.split(' ')[0].upper() == 'DISARM'
+            if msg.split(' ')[1] == self.alarm_pwd:
+                if self.disarm() == 1:
+                    msg1 = '[Remote CMD] System status: Disarmed'
+                else:
+                    msg1 = "[Remote CMD] System status: failed to disarm"
             else:
-                msg1 = "[Remote CMD] System status: failed to disarm"
+                msg1 = '[Remote CMD] System status: Wrong password, system is Armed'
 
         elif msg.upper() == 'STATUS':
             msg1 = self.get_status()
