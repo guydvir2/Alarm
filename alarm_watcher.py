@@ -45,6 +45,9 @@ class GPIOMonitor(Thread):
         self.last_state = [None, None, None, None]
         self.alarm_on_flag = False
         self.alarm_start_time = None
+        self.alarm_pwd = "5161"
+        self.ask_disarm = False
+        self.disarm_timeout = 30  # sec
 
         # ##
 
@@ -205,7 +208,7 @@ class GPIOMonitor(Thread):
             time.sleep(0.2)
             self.homearm_cb(0)
 
-        if self.sysarm_hw.value is True: # treated as an alert situation
+        if self.sysarm_hw.value is True:  # treated as an alert situation
             self.notify(msg="[Hardware CMD]: Disarm, fail", platform='mt')
             return 0
         else:
@@ -236,7 +239,7 @@ class GPIOMonitor(Thread):
             else:
                 msg1 = "[Remote CMD] failed arming to Full mode"
 
-        elif msg.upper() == 'DISARM':
+        elif msg.split(' ')[0].upper() == 'DISARM' and msg.split(' ')[1] == self.alarm_pwd:
             if self.disarm() == 1:
                 msg1 = '[Remote CMD] System status: Disarmed'
             else:
@@ -266,6 +269,7 @@ class GPIOMonitor(Thread):
         self.mqtt_client.pub(payload='%s [%s] %s' % (time_stamp, device_name, msg), topic=msg_topic)
 
     def start_telegram_service(self):
+        # this way I use MQTT command to be same when reaching from Telegram
         self.telegram_bot.telbot_commands = lambda: self.mqtt_commands(self.telegram_bot.telbot_arrived_msg, origin='t')
         self.telegram_bot.start()
         time.sleep(1)
