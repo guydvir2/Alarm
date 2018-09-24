@@ -83,11 +83,16 @@ class GPIOMonitor(Thread):
 
     def run(self):
         self.alert(msg="AlarmSystem started")
-        self.detect_hardware_state()
 
+        # first run
+        self.current_state = [self.fullarm_hw.value, self.homearm_hw.value, self.sysarm_hw.value, self.alarm_hw.value]
+        self.detect_hardware_state()
 
         while True:
             # current_status = [self.fullarm_hw.value, self.homearm_hw.value, self.sysarm_hw.value, self.alarm_hw.value]
+            self.current_state = [self.fullarm_hw.value, self.homearm_hw.value, self.sysarm_hw.value,
+                                  self.alarm_hw.value]
+
             if self.current_state != self.last_state:
                 self.detect_hardware_state()
 
@@ -119,13 +124,11 @@ class GPIOMonitor(Thread):
             #                 self.alarm_start_time = None
             # self.last_state[i] = current_gpio
 
-
             time.sleep(1)
 
     def detect_hardware_state(self):
         msgs = ['Full-mode Arm', 'Home-mode Arm', 'System Arm state', 'Alarm state']
         state_msgs = ['armed_away', 'armed_home', 'disarmed', 'triggered', 'pending']
-        self.current_state = [self.fullarm_hw.value, self.homearm_hw.value, self.sysarm_hw.value, self.alarm_hw.value]
 
         for i, current_gpio in enumerate(self.current_state):
             msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
