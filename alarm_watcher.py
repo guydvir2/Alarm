@@ -282,6 +282,13 @@ class GPIOMonitor(Thread):
             except IndexError:
                 msg1 = "[Remote CMD] System status: password missing, abort"
 
+        # disarm with code only
+        elif msg == self.alarm_pwd:
+            if self.disarm() == 1:  # case of not supplying any password :)
+                msg1 = '[Remote CMD] System status: Disarmed'
+            else:
+                msg1 = "[Remote CMD] System status: failed to disarm"
+
         elif msg.upper() == 'STATUS':
             msg1 = self.get_status()
 
