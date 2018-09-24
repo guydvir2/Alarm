@@ -82,7 +82,7 @@ class GPIOMonitor(Thread):
     def run(self):
         self.alert(msg="AlarmSystem started")
         msgs = ['Full-mode Arm', 'Home-mode Arm', 'System Arm state', 'Alarm state']
-        state_msgs = ['armed_away', 'armed_home', 'disarmed', 'pending', 'triggered']
+        state_msgs = ['armed_away', 'armed_home', 'disarmed', 'triggered', 'pending']
         first_run = 1
 
         while True:
@@ -92,21 +92,26 @@ class GPIOMonitor(Thread):
                     if self.last_state[i] != current_gpio:
                         msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
                         self.notify(msg1)
-                        if i == 1 :#and self.sysarm_hw.value == 1:
+
+                        # arm away
+                        if i == 0:
+                            if current_gpio is True:
+                                self.mqtt_client.pub(payload=state_msgs[0], topic=self.state_topic, retain=True)
+                        # arm home
+                        elif i == 1:
                             if current_gpio is True:
                                 self.mqtt_client.pub(payload=state_msgs[1], topic=self.state_topic, retain=True)
-                        elif i == 2 :#and self.sysarm_hw.value == 1:
-                            if current_gpio is True:
+                        # disarmed
+                        if i == 2:
+                            if current_gpio is False:
                                 self.mqtt_client.pub(payload=state_msgs[2], topic=self.state_topic, retain=True)
-                        if i == 4:
-                            if current_gpio is True:
-                                self.mqtt_client.pub(payload=state_msgs[4], topic=self.state_topic, retain=True)
                     self.last_state[i] = current_gpio
 
                 if current_status[3] is True:
                     if self.alarm_start_time is None:
                         self.alarm_start_time = time.time()
                         self.notify(msg="System is ALARMING!", platform='mt')
+                        self.mqtt_client.pub(payload=state_msgs[4], topic=self.state_topic, retain=True)
 
                 elif current_status[3] is False and self.alarm_start_time is not None:
                     self.notify(msg="System stopped Alarming", platform='mt')
