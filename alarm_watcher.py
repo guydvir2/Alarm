@@ -151,7 +151,7 @@ class GPIOMonitor(Thread):
                 self.notify(msg="System stopped Alarming", platform='mt')
                 self.alarm_start_time = None
 
-        self.last_state[i] = current_gpio
+        self.current_state = self.last_state
 
     def get_status(self):
         msg = 'Empty status result'
