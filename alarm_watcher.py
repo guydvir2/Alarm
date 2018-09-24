@@ -23,13 +23,14 @@ from tbot import TelegramBot
 class GPIOMonitor(Thread):
     def __init__(self, ip=None, alias='HomePi-AlarmSys monitor', listen_pins=[21, 20], trigger_pins=[16, 26],
                  log_filepath='', device_topic=None, msg_topic=None, alert_topic=None, group_topics=None,
-                 broker='192.168.2.120', qos=0, username=None, password=None):
+                 broker='192.168.2.120', qos=0, username=None, password=None, state_topic=None):
         # listen_pins = [sys.arm, alarm.on], trigger_pins=[full, home]
 
         # ## MQTT
         self.alert_topic = alert_topic
         self.msg_topic = msg_topic
         self.device_topic = device_topic
+        self.state_topic = state_topic
         # ##
 
         # ## GPIO
@@ -81,6 +82,7 @@ class GPIOMonitor(Thread):
     def run(self):
         self.alert(msg="AlarmSystem started")
         msgs = ['Full-mode Arm', 'Home-mode Arm', 'System Arm state', 'Alarm state']
+        state_msgs = ['armed_away', 'armed_home', 'disarmed', 'pending', 'triggered']
 
         while True:
             current_status = [self.fullarm_hw.value, self.homearm_hw.value, self.sysarm_hw.value, self.alarm_hw.value]
@@ -89,6 +91,15 @@ class GPIOMonitor(Thread):
                     if self.last_state[i] != current_gpio:
                         msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
                         self.notify(msg1)
+                        if i == 1 and self.sysarm_hw.value == 1:
+                            if current_gpio[i] is True:
+                                self.mqtt_client.pub(payload=state_msgs[1], topic=self.state_topic, retain=True)
+                        elif i == 2 and self.sysarm_hw.value == 1:
+                            if current_gpio[i] is True:
+                                self.mqtt_client.pub(payload=state_msgs[2], topic=self.state_topic, retain=True)
+                        if i == 4:
+                            if current_gpio[i] is True:
+                                self.mqtt_client.pub(payload=state_msgs[4], topic=self.state_topic, retain=True)
                     self.last_state[i] = current_gpio
 
                 if current_status[3] is True:
@@ -304,6 +315,7 @@ DEVICE_TOPIC = 'HomePi/Dvir/AlarmSystem'
 MSG_TOPIC = 'HomePi/Dvir/Messages'
 ALERT_TOPIC = 'HomePi/Dvir/Alerts'
 GROUP_TOPICS = 'HomePi/Dvir/All'
+STATE_TOPIC = 'HomePi/Dvir/AlarmSystem/State'
 BROKER = '192.168.2.200'
 USER = "guy"
 PASSWORD = "kupelu9e"
@@ -316,6 +328,7 @@ LOG_FILE = '/home/guy/'
 
 alarmsys_monitor = GPIOMonitor(ip=None, listen_pins=LISTEN_PINS, trigger_pins=TRIGGER_PINS, alias=ALIAS,
                                log_filepath=LOG_FILE, device_topic=DEVICE_TOPIC, msg_topic=MSG_TOPIC,
-                               group_topics=GROUP_TOPICS, alert_topic=ALERT_TOPIC, broker=BROKER, username=USER,
+                               group_topics=GROUP_TOPICS, alert_topic=ALERT_TOPIC, state_topic=STATE_TOPIC,
+                               broker=BROKER, username=USER,
                                password=PASSWORD, qos=QOS)
 alarmsys_monitor.start()
