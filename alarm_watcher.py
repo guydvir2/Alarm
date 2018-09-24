@@ -44,6 +44,8 @@ class GPIOMonitor(Thread):
         self.alias = alias
         self.log_filename = log_filepath + 'AlarmMonitor.log'
         self.last_state = [None, None, None, None]
+        self.current_state = [None, None, None, None]
+
         self.alarm_on_flag = False
         self.alarm_start_time = None
         self.alarm_pwd = "5161"
@@ -81,44 +83,75 @@ class GPIOMonitor(Thread):
 
     def run(self):
         self.alert(msg="AlarmSystem started")
-        msgs = ['Full-mode Arm', 'Home-mode Arm', 'System Arm state', 'Alarm state']
-        state_msgs = ['armed_away', 'armed_home', 'disarmed', 'triggered', 'pending']
-        first_run = 1
+        self.detect_hardware_state()
+
 
         while True:
-            current_status = [self.fullarm_hw.value, self.homearm_hw.value, self.sysarm_hw.value, self.alarm_hw.value]
-            if current_status != self.last_state and first_run != 1:
-                for i, current_gpio in enumerate(current_status):
-                    if self.last_state[i] != current_gpio:
-                        msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
-                        self.notify(msg1)
+            # current_status = [self.fullarm_hw.value, self.homearm_hw.value, self.sysarm_hw.value, self.alarm_hw.value]
+            if self.current_state != self.last_state:
+                self.detect_hardware_state()
 
-                        # arm away
-                        if i == 0:
-                            if current_gpio is True:
-                                self.mqtt_client.pub(payload=state_msgs[0], topic=self.state_topic, retain=True)
-                        # arm home
-                        elif i == 1:
-                            if current_gpio is True:
-                                self.mqtt_client.pub(payload=state_msgs[1], topic=self.state_topic, retain=True)
-                        # disarmed
-                        if i == 2:
-                            if current_gpio is False:
-                                self.mqtt_client.pub(payload=state_msgs[2], topic=self.state_topic, retain=True)
-                    self.last_state[i] = current_gpio
+            # change of status (ignore first run ):
+            # if current_status != self.last_state and first_run != 1:
+            #     for i, current_gpio in enumerate(current_status):
+            #         if self.last_state[i] != current_gpio:
+            #             msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
+            #             self.notify(msg1)
+            #
+            #             # arm away
+            #             if i == 0 and current_gpio is True:
+            #                 self.mqtt_client.pub(payload=state_msgs[0], topic=self.state_topic, retain=True)
+            #             # arm home
+            #             elif i == 1 and current_gpio is True:
+            #                 self.mqtt_client.pub(payload=state_msgs[1], topic=self.state_topic, retain=True)
+            #             # disarmed
+            #             elif i == 2 and current_gpio is False:
+            #                 self.mqtt_client.pub(payload=state_msgs[2], topic=self.state_topic, retain=True)
+            #             # triggered
+            #             if i == 3 and current_gpio is True:
+            #                 if self.alarm_start_time is None:
+            #                     self.alarm_start_time = time.time()
+            #                     self.notify(msg="System is ALARMING!", platform='mt')
+            #                     self.mqtt_client.pub(payload=state_msgs[3], topic=self.state_topic, retain=True)
+            #
+            #             elif i == 3 and current_gpio is False and self.alarm_start_time is not None:
+            #                 self.notify(msg="System stopped Alarming", platform='mt')
+            #                 self.alarm_start_time = None
+            # self.last_state[i] = current_gpio
 
-                if current_status[3] is True:
-                    if self.alarm_start_time is None:
-                        self.alarm_start_time = time.time()
-                        self.notify(msg="System is ALARMING!", platform='mt')
-                        self.mqtt_client.pub(payload=state_msgs[4], topic=self.state_topic, retain=True)
-
-                elif current_status[3] is False and self.alarm_start_time is not None:
-                    self.notify(msg="System stopped Alarming", platform='mt')
-                    self.alarm_start_time = None
 
             time.sleep(1)
-            first_run = 0
+
+    def detect_hardware_state(self):
+        msgs = ['Full-mode Arm', 'Home-mode Arm', 'System Arm state', 'Alarm state']
+        state_msgs = ['armed_away', 'armed_home', 'disarmed', 'triggered', 'pending']
+        self.current_state = [self.fullarm_hw.value, self.homearm_hw.value, self.sysarm_hw.value, self.alarm_hw.value]
+
+        for i, current_gpio in enumerate(self.current_state):
+            msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
+            self.notify(msg1)
+
+            # arm away
+            if i == 0 and current_gpio is True:
+                self.mqtt_client.pub(payload=state_msgs[0], topic=self.state_topic, retain=True)
+            # arm home
+            elif i == 1 and current_gpio is True:
+                self.mqtt_client.pub(payload=state_msgs[1], topic=self.state_topic, retain=True)
+            # disarmed
+            elif i == 2 and current_gpio is False:
+                self.mqtt_client.pub(payload=state_msgs[2], topic=self.state_topic, retain=True)
+            # triggered
+            if i == 3 and current_gpio is True:
+                if self.alarm_start_time is None:
+                    self.alarm_start_time = time.time()
+                    self.notify(msg="System is ALARMING!", platform='mt')
+                    self.mqtt_client.pub(payload=state_msgs[3], topic=self.state_topic, retain=True)
+
+            elif i == 3 and current_gpio is False and self.alarm_start_time is not None:
+                self.notify(msg="System stopped Alarming", platform='mt')
+                self.alarm_start_time = None
+
+        self.last_state[i] = current_gpio
 
     def get_status(self):
         msg = 'Empty status result'
@@ -255,7 +288,6 @@ class GPIOMonitor(Thread):
         time.sleep(1)
 
     def mqtt_commands(self, msg, origin=None):
-
         if msg.upper() == 'HOME':
             self.homearm_cb(1)
             if self.homearm_cb() == 1:
@@ -270,24 +302,29 @@ class GPIOMonitor(Thread):
             else:
                 msg1 = "[Remote CMD] failed arming to Full mode"
 
-        elif msg.split(' ')[0].upper() == 'DISARM':
-            try:
-                if msg.split(' ')[1] == self.alarm_pwd:
-                    if self.disarm() == 1:  # case of not supplying any password :)
-                        msg1 = '[Remote CMD] System status: Disarmed'
-                    else:
-                        msg1 = "[Remote CMD] System status: failed to disarm"
-                else:
-                    msg1 = '[Remote CMD] System status: Wrong password, system still Armed'
-            except IndexError:
-                msg1 = "[Remote CMD] System status: password missing, abort"
-
-        # disarm with code only
-        elif msg == self.alarm_pwd:
-            if self.disarm() == 1:  # case of not supplying any password :)
+        elif msg.upper() == 'DISARM':
+            if self.disarm() == 1:
                 msg1 = '[Remote CMD] System status: Disarmed'
             else:
                 msg1 = "[Remote CMD] System status: failed to disarm"
+        # elif msg.split(' ')[0].upper() == 'DISARM':
+        #     try:
+        #         if msg.split(' ')[1] == self.alarm_pwd:
+        #             if self.disarm() == 1:  # case of not supplying any password :)
+        #                 msg1 = '[Remote CMD] System status: Disarmed'
+        #             else:
+        #                 msg1 = "[Remote CMD] System status: failed to disarm"
+        #         else:
+        #             msg1 = '[Remote CMD] System status: Wrong password, system still Armed'
+        #     except IndexError:
+        #         msg1 = "[Remote CMD] System status: password missing, abort"
+
+        # # disarm with code only
+        # elif msg == self.alarm_pwd:
+        #     if self.disarm() == 1:  # case of not supplying any password :)
+        #         msg1 = '[Remote CMD] System status: Disarmed'
+        #     else:
+        #         msg1 = "[Remote CMD] System status: failed to disarm"
 
         elif msg.upper() == 'STATUS':
             msg1 = self.get_status()
