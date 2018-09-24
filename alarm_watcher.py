@@ -92,13 +92,13 @@ class GPIOMonitor(Thread):
                         msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
                         self.notify(msg1)
                         if i == 1 and self.sysarm_hw.value == 1:
-                            if current_gpio[i] is True:
+                            if current_gpio is True:
                                 self.mqtt_client.pub(payload=state_msgs[1], topic=self.state_topic, retain=True)
                         elif i == 2 and self.sysarm_hw.value == 1:
-                            if current_gpio[i] is True:
+                            if current_gpio is True:
                                 self.mqtt_client.pub(payload=state_msgs[2], topic=self.state_topic, retain=True)
                         if i == 4:
-                            if current_gpio[i] is True:
+                            if current_gpio is True:
                                 self.mqtt_client.pub(payload=state_msgs[4], topic=self.state_topic, retain=True)
                     self.last_state[i] = current_gpio
 
