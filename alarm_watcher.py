@@ -83,10 +83,11 @@ class GPIOMonitor(Thread):
         self.alert(msg="AlarmSystem started")
         msgs = ['Full-mode Arm', 'Home-mode Arm', 'System Arm state', 'Alarm state']
         state_msgs = ['armed_away', 'armed_home', 'disarmed', 'pending', 'triggered']
+        first_run = 1
 
         while True:
             current_status = [self.fullarm_hw.value, self.homearm_hw.value, self.sysarm_hw.value, self.alarm_hw.value]
-            if current_status != self.last_state:
+            if current_status != self.last_state and first_run != 1:
                 for i, current_gpio in enumerate(current_status):
                     if self.last_state[i] != current_gpio:
                         msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
@@ -112,6 +113,7 @@ class GPIOMonitor(Thread):
                     self.alarm_start_time = None
 
             time.sleep(1)
+            first_run = 0
 
     def get_status(self):
         msg = 'Empty status result'
