@@ -102,7 +102,7 @@ class GPIOMonitor(Thread):
         state_msgs = ['armed_away', 'armed_home', 'disarmed', 'triggered', 'pending']
 
         for i, current_gpio in enumerate(self.current_state):
-            if self.current_state[i] != current_gpio:
+            if self.last_state[i] != current_gpio:
                 # msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
                 # self.notify(msg1)
 
