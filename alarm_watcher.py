@@ -86,7 +86,7 @@ class GPIOMonitor(Thread):
 
         # first run
         self.current_state = [self.fullarm_hw.value, self.homearm_hw.value, self.sysarm_hw.value, self.alarm_hw.value]
-        self.detect_hardware_state()
+        self.last_state = self.current_state.copy()  # self.detect_hardware_state()
 
         while True:
             self.current_state = [self.fullarm_hw.value, self.homearm_hw.value, self.sysarm_hw.value,
