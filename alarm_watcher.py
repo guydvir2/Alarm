@@ -118,7 +118,7 @@ class GPIOMonitor(Thread):
 
 
                 # arm home
-                elif i == 1 and current_gpio is True:
+                if i == 1 and current_gpio is True:
                     self.mqtt_client.pub(payload=state_msgs[1], topic=self.state_topic, retain=True)
                     self.notify(msg="[Hardware CMD]: Home-arm [ON]")
                     msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
@@ -129,7 +129,7 @@ class GPIOMonitor(Thread):
 
 
                 # disarmed
-                elif i == 2 and current_gpio is False:
+                if i == 2 and current_gpio is False:
                     self.mqtt_client.pub(payload=state_msgs[2], topic=self.state_topic, retain=True)
                     self.notify(msg="[Hardware CMD]: Disarm, ok")
                     msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
