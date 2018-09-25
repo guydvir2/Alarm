@@ -102,58 +102,59 @@ class GPIOMonitor(Thread):
         state_msgs = ['armed_away', 'armed_home', 'disarmed', 'triggered', 'pending']
 
         for i, current_gpio in enumerate(self.current_state):
-            # msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
-            # self.notify(msg1)
+            if self.current_state[i] != current_gpio:
+                # msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
+                # self.notify(msg1)
+    
+                # arm away
+                if i == 0 and current_gpio is True:
+                    self.mqtt_client.pub(payload=state_msgs[0], topic=self.state_topic, retain=True)
+                    self.notify(msg="[Hardware CMD]: Full-arm [ON]")
+                    msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
 
-            # arm away
-            if i == 0 and current_gpio is True:
-                self.mqtt_client.pub(payload=state_msgs[0], topic=self.state_topic, retain=True)
-                self.notify(msg="[Hardware CMD]: Full-arm [ON]")
-                msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
-
-            elif i == 0 and current_gpio is False:
-                self.notify(msg="[Hardware CMD]: Full-arm [OFF]")
-                msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
-
-
-            # arm home
-            elif i == 1 and current_gpio is True:
-                self.mqtt_client.pub(payload=state_msgs[1], topic=self.state_topic, retain=True)
-                self.notify(msg="[Hardware CMD]: Home-arm [ON]")
-                msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
-
-            elif i == 1 and current_gpio is False:
-                self.notify(msg="[Hardware CMD]: Home-arm [OFF]")
-                msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
-
-
-            # disarmed
-            elif i == 2 and current_gpio is False:
-                self.mqtt_client.pub(payload=state_msgs[2], topic=self.state_topic, retain=True)
-                self.notify(msg="[Hardware CMD]: Disarm, ok")
-                msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
-
-                # test
-                self.mqtt_client.pub(payload="disarmed", topic='HomePi/Dvir/AlarmSystem/manual_op', retain=True)
-
-            # #### under-test#######
-            elif i == 2 and current_gpio is True:
-                self.mqtt_client.pub(payload="armed", topic='HomePi/Dvir/AlarmSystem/manual_op', retain=True)
-                msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
-
-            # triggered
-            if i == 3 and current_gpio is True:
-                if self.alarm_start_time is None:
-                    self.alarm_start_time = time.time()
-                    self.notify(msg="System is ALARMING!", platform='mt')
-                    self.mqtt_client.pub(payload=state_msgs[3], topic=self.state_topic, retain=True)
+                elif i == 0 and current_gpio is False:
+                    self.notify(msg="[Hardware CMD]: Full-arm [OFF]")
                     msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
 
 
-            elif i == 3 and current_gpio is False and self.alarm_start_time is not None:
-                self.notify(msg="System stopped Alarming", platform='mt')
-                self.alarm_start_time = None
-                msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
+                # arm home
+                elif i == 1 and current_gpio is True:
+                    self.mqtt_client.pub(payload=state_msgs[1], topic=self.state_topic, retain=True)
+                    self.notify(msg="[Hardware CMD]: Home-arm [ON]")
+                    msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
+
+                elif i == 1 and current_gpio is False:
+                    self.notify(msg="[Hardware CMD]: Home-arm [OFF]")
+                    msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
+
+
+                # disarmed
+                elif i == 2 and current_gpio is False:
+                    self.mqtt_client.pub(payload=state_msgs[2], topic=self.state_topic, retain=True)
+                    self.notify(msg="[Hardware CMD]: Disarm, ok")
+                    msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
+
+                    # test
+                    self.mqtt_client.pub(payload="disarmed", topic='HomePi/Dvir/AlarmSystem/manual_op', retain=True)
+
+                # #### under-test#######
+                elif i == 2 and current_gpio is True:
+                    self.mqtt_client.pub(payload="armed", topic='HomePi/Dvir/AlarmSystem/manual_op', retain=True)
+                    msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
+
+                # triggered
+                if i == 3 and current_gpio is True:
+                    if self.alarm_start_time is None:
+                        self.alarm_start_time = time.time()
+                        self.notify(msg="System is ALARMING!", platform='mt')
+                        self.mqtt_client.pub(payload=state_msgs[3], topic=self.state_topic, retain=True)
+                        msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
+
+
+                elif i == 3 and current_gpio is False and self.alarm_start_time is not None:
+                    self.notify(msg="System stopped Alarming", platform='mt')
+                    self.alarm_start_time = None
+                    msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
 
             self.notify(msg1)
         self.last_state = self.current_state
