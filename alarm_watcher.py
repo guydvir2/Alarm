@@ -105,7 +105,7 @@ class GPIOMonitor(Thread):
             if self.current_state[i] != current_gpio:
                 # msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
                 # self.notify(msg1)
-    
+
                 # arm away
                 if i == 0 and current_gpio is True:
                     self.mqtt_client.pub(payload=state_msgs[0], topic=self.state_topic, retain=True)
@@ -156,7 +156,7 @@ class GPIOMonitor(Thread):
                     self.alarm_start_time = None
                     msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
 
-            self.notify(msg1)
+                self.notify(msg1)
         self.last_state = self.current_state
 
     def get_status(self):
