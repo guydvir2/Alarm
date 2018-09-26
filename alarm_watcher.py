@@ -190,7 +190,7 @@ class GPIOMonitor(Thread):
         self.logger.append_log(msg)
 
         # choose notification platform:
-        if platform == 'm':
+        if platform == 'm' or platform is None:
             self.pub_msg(msg=msg)
         if platform == 't':
             self.telegram_bot.send_msg(msg)
