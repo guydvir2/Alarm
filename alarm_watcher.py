@@ -117,14 +117,6 @@ class GPIOMonitor(Thread):
                 elif (i == 0 or i == 1) and current_gpio is False:
                     msg1 = '[watchdog] [%s] :%s' % (self.system_states[i], current_gpio)
 
-                # # arm home
-                # if i == 1 and current_gpio is True:
-                #     self.mqtt_client.pub(payload=state_msgs[1], topic=self.state_topic, retain=True)
-                #     msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
-                #
-                # elif i == 1 and current_gpio is False:
-                #     msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
-
                 # disarmed
                 if i == 2 and current_gpio is False:
                     self.mqtt_client.pub(payload=self.system_states[i], topic=self.state_topic, retain=True)
@@ -144,7 +136,6 @@ class GPIOMonitor(Thread):
                         self.alarm_start_time = time.time()
                         self.mqtt_client.pub(payload=self.system_states[i], topic=self.state_topic, retain=True)
                         msg1 = '[watchdog] [%s] :%s' % (self.system_states[i], current_gpio)
-                        # msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
 
                 elif i == 3 and current_gpio is False and self.alarm_start_time is not None:
                     self.notify(msg="System stopped Alarming", platform='mt')
@@ -334,21 +325,25 @@ class GPIOMonitor(Thread):
         time.sleep(1)
 
     def mqtt_commands(self, msg, origin=None):
-        if msg.upper() == 'HOME':
+
+        # armed_home
+        if msg.upper() == self.system_states[1]:
             self.homearm_cb(1)
             if self.homearm_cb() == 1:
                 msg1 = '[Remote CMD]: Home mode arm'
             else:
                 msg1 = "[Remote CMD] failed arming Home mode "
 
-        elif msg.upper() == 'FULL':
+        # armed_away
+        elif msg.upper() == self.system_states[0]:
             self.fullarm_cb(1)
             if self.fullarm_cb() == 1:
                 msg1 = '[Remote CMD]: Full mode arm'
             else:
                 msg1 = "[Remote CMD] failed arming to Full mode"
 
-        elif msg.upper() == 'DISARM':
+        # disarmed
+        elif msg.upper() ==self.system_states[2]:
             if self.disarm() == 1:
                 msg1 = '[Remote CMD]: Disarm'
             else:
