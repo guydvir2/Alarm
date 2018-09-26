@@ -23,7 +23,8 @@ from tbot import TelegramBot
 class GPIOMonitor(Thread):
     def __init__(self, ip=None, alias='HomePi-AlarmSys monitor', listen_pins=[21, 20], trigger_pins=[16, 26],
                  log_filepath='', device_topic=None, msg_topic=None, alert_topic=None, group_topics=None,
-                 broker='192.168.2.120', qos=0, username=None, password=None, state_topic=None):
+                 broker='192.168.2.120', qos=0, username=None, password=None, state_topic=None,
+                 MAN_state_topic=None):
         # listen_pins = [sys.arm, alarm.on], trigger_pins=[full, home]
 
         # ## MQTT
@@ -31,6 +32,7 @@ class GPIOMonitor(Thread):
         self.msg_topic = msg_topic
         self.device_topic = device_topic
         self.state_topic = state_topic
+        self.man_state_topic = MAN_state_topic
         # ##
 
         # ## GPIO
@@ -88,7 +90,7 @@ class GPIOMonitor(Thread):
 
         # first run
         self.current_state = [self.fullarm_hw.value, self.homearm_hw.value, self.sysarm_hw.value, self.alarm_hw.value]
-        self.last_state = self.current_state.copy()  # self.detect_hardware_state()
+        self.last_state = self.current_state.copy()
 
         while True:
             self.current_state = [self.fullarm_hw.value, self.homearm_hw.value, self.sysarm_hw.value,
@@ -109,7 +111,6 @@ class GPIOMonitor(Thread):
                 # arm away
                 if i == 0 and current_gpio is True:
                     self.mqtt_client.pub(payload=state_msgs[0], topic=self.state_topic, retain=True)
-                    # self.notify(msg="[Hardware CMD]: Full-arm [ON]")
                     msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
 
                 elif i == 0 and current_gpio is False:
@@ -119,32 +120,28 @@ class GPIOMonitor(Thread):
                 # arm home
                 if i == 1 and current_gpio is True:
                     self.mqtt_client.pub(payload=state_msgs[1], topic=self.state_topic, retain=True)
-                    # self.notify(msg="[Hardware CMD]: Home-arm [ON]")
                     msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
 
                 elif i == 1 and current_gpio is False:
-                    # self.notify(msg="[Hardware CMD]: Home-arm [OFF]")
                     msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
 
                 # disarmed
                 if i == 2 and current_gpio is False:
                     self.mqtt_client.pub(payload=state_msgs[2], topic=self.state_topic, retain=True)
-                    # self.notify(msg="[Hardware CMD]: Disarm, ok")
                     msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
 
                     # test
-                    self.mqtt_client.pub(payload="disarmed", topic='HomePi/Dvir/AlarmSystem/manual_op', retain=True)
+                    self.mqtt_client.pub(payload="disarmed", topic=self.man_state_topic, retain=True)
 
                 # #### under-test#######
                 elif i == 2 and current_gpio is True:
-                    self.mqtt_client.pub(payload="armed", topic='HomePi/Dvir/AlarmSystem/manual_op', retain=True)
+                    self.mqtt_client.pub(payload="armed", topic=self.man_state_topic, retain=True)
                     msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
 
                 # triggered
                 if i == 3 and current_gpio is True:
                     if self.alarm_start_time is None:
                         self.alarm_start_time = time.time()
-                        # self.notify(msg="System is ALARMING!", platform='mt')
                         self.mqtt_client.pub(payload=state_msgs[3], topic=self.state_topic, retain=True)
                         msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
 
@@ -281,7 +278,6 @@ class GPIOMonitor(Thread):
                 self.notify(msg="[Hardware CMD]: Home-arm [OFF], failed")
                 return 1
 
-
     def disarm(self):
         # case 1 : armed by software ( has a relay indication )
         if self.sysarm_hw.value is True and any([self.fullarm_hw.value, self.homearm_hw.value]):
@@ -395,6 +391,7 @@ MSG_TOPIC = 'HomePi/Dvir/Messages'
 ALERT_TOPIC = 'HomePi/Dvir/Alerts'
 GROUP_TOPICS = 'HomePi/Dvir/All'
 STATE_TOPIC = 'HomePi/Dvir/AlarmSystem/State'
+MAN_STATE_TOPIC = 'HomePi/Dvir/AlarmSystem/MAN_State'
 BROKER = '192.168.2.200'
 USER = "guy"
 PASSWORD = "kupelu9e"
@@ -408,6 +405,6 @@ LOG_FILE = '/home/guy/'
 alarmsys_monitor = GPIOMonitor(ip=None, listen_pins=LISTEN_PINS, trigger_pins=TRIGGER_PINS, alias=ALIAS,
                                log_filepath=LOG_FILE, device_topic=DEVICE_TOPIC, msg_topic=MSG_TOPIC,
                                group_topics=GROUP_TOPICS, alert_topic=ALERT_TOPIC, state_topic=STATE_TOPIC,
-                               broker=BROKER, username=USER,
+                               broker=BROKER, username=USER, MAN_state_topic=MAN_STATE_TOPIC,
                                password=PASSWORD, qos=QOS)
 alarmsys_monitor.start()
