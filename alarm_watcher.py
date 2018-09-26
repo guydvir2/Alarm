@@ -293,9 +293,13 @@ class GPIOMonitor(Thread):
 
         # case 2: armed manually by user ( no indication by relay )
         if self.sysarm_hw.value is True and self.fullarm_hw.value == 0 and self.homearm_hw.value == 0:
-            self.fullarm_cb(0)
+            # arm ( not knowing what state it realy is )
+            self.fullarm_cb(1)
             time.sleep(1)
-            self.homearm_cb(0)
+            # and now disarm
+            self.fullarm_cb(0)
+
+            # self.homearm_cb(0)
 
             # verify
             if all([self.homearm_hw.value, self.fullarm_hw.value, self.sysarm_hw.value]) is False:
