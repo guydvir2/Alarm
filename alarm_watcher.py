@@ -103,35 +103,31 @@ class GPIOMonitor(Thread):
 
         for i, current_gpio in enumerate(self.current_state):
             if self.last_state[i] != current_gpio:
-                # msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
-                # self.notify(msg1)
 
                 # arm away
                 if i == 0 and current_gpio is True:
                     self.mqtt_client.pub(payload=state_msgs[0], topic=self.state_topic, retain=True)
-                    self.notify(msg="[Hardware CMD]: Full-arm [ON]")
+                    # self.notify(msg="[Hardware CMD]: Full-arm [ON]")
                     msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
 
                 elif i == 0 and current_gpio is False:
                     self.notify(msg="[Hardware CMD]: Full-arm [OFF]")
                     msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
 
-
                 # arm home
                 if i == 1 and current_gpio is True:
                     self.mqtt_client.pub(payload=state_msgs[1], topic=self.state_topic, retain=True)
-                    self.notify(msg="[Hardware CMD]: Home-arm [ON]")
+                    # self.notify(msg="[Hardware CMD]: Home-arm [ON]")
                     msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
 
                 elif i == 1 and current_gpio is False:
-                    self.notify(msg="[Hardware CMD]: Home-arm [OFF]")
+                    # self.notify(msg="[Hardware CMD]: Home-arm [OFF]")
                     msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
-
 
                 # disarmed
                 if i == 2 and current_gpio is False:
                     self.mqtt_client.pub(payload=state_msgs[2], topic=self.state_topic, retain=True)
-                    self.notify(msg="[Hardware CMD]: Disarm, ok")
+                    # self.notify(msg="[Hardware CMD]: Disarm, ok")
                     msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
 
                     # test
@@ -146,7 +142,7 @@ class GPIOMonitor(Thread):
                 if i == 3 and current_gpio is True:
                     if self.alarm_start_time is None:
                         self.alarm_start_time = time.time()
-                        self.notify(msg="System is ALARMING!", platform='mt')
+                        # self.notify(msg="System is ALARMING!", platform='mt')
                         self.mqtt_client.pub(payload=state_msgs[3], topic=self.state_topic, retain=True)
                         msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
 
@@ -206,41 +202,88 @@ class GPIOMonitor(Thread):
         if set_state is None:
             return self.fullarm_hw.value
 
+        #  arm full
         if set_state == 1:
+            # case it wa not home arm before
             if self.homearm_cb() == 0:
                 self.fullarm_hw.on()
-                # self.notify(msg="[Hardware CMD]: Full-arm [ON]")
-                return 1
+                if self.fullarm_hw.value == 1:
+                    self.notify(msg="[Hardware CMD]: Full-arm [ON]")
+                    return 1
+                else:
+                    self.notify(msg="[Hardware CMD]: Full-arm [ON], failed")
+                    return 0
+
+            # case it was home armed before
             elif self.homearm_cb() == 1:
                 self.homearm_cb(set_state=0)
                 time.sleep(2)
-                self.fullarm_hw.on()
-                # self.notify(msg="[Hardware CMD]: Full-arm [ON]")
-                return 1
+                if self.homearm_cb() == 0:
+                    self.fullarm_hw.on()
+                    if self.fullarm_hw.value == 1:
+                        self.notify(msg="[Hardware CMD]: Full-arm [ON]")
+                        return 1
+                    else:
+                        self.notify(msg="[Hardware CMD]: Full-arm [ON], failed")
+                        return 0
+                else:
+                    self.notify(msg="[Hardware CMD]: Full-arm [ON], failed")
+                    return 0
 
         elif set_state == 0:
             self.fullarm_hw.off()
-            # self.notify(msg="[Hardware CMD]: Full-arm [OFF]")
-            return 0
+            if self.fullarm_hw.value == 0:
+                self.notify(msg="[Hardware CMD]: Full-arm [OFF]")
+                return 0
+            else:
+                self.notify(msg="[Hardware CMD]: Full-arm [OFF], failed")
+                return 1
 
     def homearm_cb(self, set_state=None):
         if set_state is None:
             return self.homearm_hw.value
 
+        # arm home
         if set_state == 1:
+            # switch from full state
             if self.fullarm_cb() == 1:
                 self.fullarm_cb(set_state=0)
                 time.sleep(2)
-                self.homearm_hw.on()
-                # self.notify(msg="[Hardware CMD]: Home-arm [ON]")
-
+                if self.fullarm_hw.value == 0:
+                    self.homearm_hw.on()
+                    if self.homearm_hw.value == 1:
+                        self.notify(msg="[Hardware CMD]: Home-arm [ON]")
+                        return 1
+                    else:
+                        self.notify(msg="[Hardware CMD]: Home-arm [ON], failed")
+                        return 0
+                else:
+                    self.notify(msg="[Hardware CMD]: Home-arm [ON], failed")
+                    return 0
+            # case it was not full armed
             elif self.fullarm_cb() == 0:
                 self.homearm_hw.on()
+                if self.homearm_hw.value == 1:
+                    self.notify(msg="[Hardware CMD]: Home-arm [ON]")
+                    return 1
+                else:
+                    self.notify(msg="[Hardware CMD]: Home-arm [ON], failed")
+                    return 0
+            # else:
+            #     self.notify(msg="[Hardware CMD]: Home-arm [ON], failed")
+            #     return 0
+
                 # self.notify(msg="[Hardware CMD]: Home-arm [ON]")
 
         elif set_state == 0:
             self.homearm_hw.off()
-            # self.notify(msg="[Hardware CMD]: Home-arm [OFF]")
+            if self.homearm_hw.value == 0:
+                self.notify(msg="[Hardware CMD]: Home-arm [OFF]")
+                return 0
+            else:
+                self.notify(msg="[Hardware CMD]: Home-arm [OFF], failed")
+                return 1
+
 
     def disarm(self):
         # case 1 : armed by software ( has a relay indication )
@@ -252,7 +295,7 @@ class GPIOMonitor(Thread):
 
             # verify all is off
             if all([self.homearm_hw.value, self.fullarm_hw.value, self.sysarm_hw.value]) is False:
-                # self.notify(msg="[Hardware CMD]: Disarm, ok")
+                self.notify(msg="[Hardware CMD]: Disarm, ok")
                 return 1
 
         # case 2: armed manually by user ( no indication by relay )
@@ -263,7 +306,7 @@ class GPIOMonitor(Thread):
 
             # verify
             if all([self.homearm_hw.value, self.fullarm_hw.value, self.sysarm_hw.value]) is False:
-                # self.notify(msg="[Hardware CMD]: Disarm, ok")
+                self.notify(msg="[Hardware CMD]: Disarm, ok")
                 return 1
 
         # case 3: some error
@@ -277,7 +320,7 @@ class GPIOMonitor(Thread):
 
             # verify
             if all([self.homearm_hw.value, self.fullarm_hw.value, self.sysarm_hw.value]) is False:
-                # self.notify(msg="[Hardware CMD]: Disarm, ok")
+                self.notify(msg="[Hardware CMD]: Disarm, ok")
                 return 1
 
         if any([self.homearm_hw.value, self.fullarm_hw.value, self.sysarm_hw.value]) is True:
