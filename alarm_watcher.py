@@ -327,7 +327,7 @@ class GPIOMonitor(Thread):
     def mqtt_commands(self, msg, origin=None):
 
         # armed_home
-        if msg.upper() == self.system_states[1]:
+        if msg.lower() == self.system_states[1]:
             self.homearm_cb(1)
             if self.homearm_cb() == 1:
                 msg1 = '[Remote CMD]: Home mode arm'
@@ -335,7 +335,7 @@ class GPIOMonitor(Thread):
                 msg1 = "[Remote CMD] failed arming Home mode "
 
         # armed_away
-        elif msg.upper() == self.system_states[0]:
+        elif msg.lower() == self.system_states[0]:
             self.fullarm_cb(1)
             if self.fullarm_cb() == 1:
                 msg1 = '[Remote CMD]: Full mode arm'
@@ -343,7 +343,7 @@ class GPIOMonitor(Thread):
                 msg1 = "[Remote CMD] failed arming to Full mode"
 
         # disarmed
-        elif msg.upper() ==self.system_states[2]:
+        elif msg.lower() ==self.system_states[2]:
             if self.disarm() == 1:
                 msg1 = '[Remote CMD]: Disarm'
             else:
