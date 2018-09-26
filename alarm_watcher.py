@@ -47,6 +47,7 @@ class GPIOMonitor(Thread):
         self.log_filename = log_filepath + 'AlarmMonitor.log'
         self.last_state = [None, None, None, None]
         self.current_state = [None, None, None, None]
+        self.system_states = ['armed_away', 'armed_home', 'disarmed', 'triggered', 'pending']
 
         self.alarm_on_flag = False
         self.alarm_start_time = None
@@ -108,27 +109,26 @@ class GPIOMonitor(Thread):
         for i, current_gpio in enumerate(self.current_state):
             if self.last_state[i] != current_gpio:
 
-                # arm away
-                if i == 0 and current_gpio is True:
-                    self.mqtt_client.pub(payload=state_msgs[0], topic=self.state_topic, retain=True)
-                    msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
+                # arm away / arm home
+                if (i == 0 or i == 1) and current_gpio is True:
+                    self.mqtt_client.pub(payload=self.system_states[i], topic=self.state_topic, retain=True)
+                    msg1 = '[watchdog] [%s] :%s' % (self.system_states[i], current_gpio)
 
-                elif i == 0 and current_gpio is False:
-                    self.notify(msg="[Hardware CMD]: Full-arm [OFF]")
-                    msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
+                elif (i == 0 or i == 1) and current_gpio is False:
+                    msg1 = '[watchdog] [%s] :%s' % (self.system_states[i], current_gpio)
 
-                # arm home
-                if i == 1 and current_gpio is True:
-                    self.mqtt_client.pub(payload=state_msgs[1], topic=self.state_topic, retain=True)
-                    msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
-
-                elif i == 1 and current_gpio is False:
-                    msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
+                # # arm home
+                # if i == 1 and current_gpio is True:
+                #     self.mqtt_client.pub(payload=state_msgs[1], topic=self.state_topic, retain=True)
+                #     msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
+                #
+                # elif i == 1 and current_gpio is False:
+                #     msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
 
                 # disarmed
                 if i == 2 and current_gpio is False:
-                    self.mqtt_client.pub(payload=state_msgs[2], topic=self.state_topic, retain=True)
-                    msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
+                    self.mqtt_client.pub(payload=self.system_states[i], topic=self.state_topic, retain=True)
+                    msg1 = '[watchdog] [%s] :%s' % (self.system_states[i], current_gpio)
 
                     # test
                     self.mqtt_client.pub(payload="disarmed", topic=self.man_state_topic, retain=True)
@@ -136,20 +136,20 @@ class GPIOMonitor(Thread):
                 # #### under-test#######
                 elif i == 2 and current_gpio is True:
                     self.mqtt_client.pub(payload="armed", topic=self.man_state_topic, retain=True)
-                    msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
+                    msg1 = '[watchdog] [%s] :%s' % (self.system_states[i], current_gpio)
 
                 # triggered
                 if i == 3 and current_gpio is True:
                     if self.alarm_start_time is None:
                         self.alarm_start_time = time.time()
-                        self.mqtt_client.pub(payload=state_msgs[3], topic=self.state_topic, retain=True)
-                        msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
-
+                        self.mqtt_client.pub(payload=self.system_states[i], topic=self.state_topic, retain=True)
+                        msg1 = '[watchdog] [%s] :%s' % (self.system_states[i], current_gpio)
+                        # msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
 
                 elif i == 3 and current_gpio is False and self.alarm_start_time is not None:
                     self.notify(msg="System stopped Alarming", platform='mt')
                     self.alarm_start_time = None
-                    msg1 = '[watchdog] [%s] :%s' % (msgs[i], current_gpio)
+                    msg1 = '[watchdog] [%s] :%s' % (self.system_states[i], current_gpio)
 
                 self.notify(msg1)
         self.last_state = self.current_state
@@ -337,22 +337,22 @@ class GPIOMonitor(Thread):
         if msg.upper() == 'HOME':
             self.homearm_cb(1)
             if self.homearm_cb() == 1:
-                msg1 = '[Remote CMD] System status: Home mode armed'
+                msg1 = '[Remote CMD]: Home mode arm'
             else:
                 msg1 = "[Remote CMD] failed arming Home mode "
 
         elif msg.upper() == 'FULL':
             self.fullarm_cb(1)
             if self.fullarm_cb() == 1:
-                msg1 = '[Remote CMD] System status: Full mode armed'
+                msg1 = '[Remote CMD]: Full mode arm'
             else:
                 msg1 = "[Remote CMD] failed arming to Full mode"
 
         elif msg.upper() == 'DISARM':
             if self.disarm() == 1:
-                msg1 = '[Remote CMD] System status: Disarmed'
+                msg1 = '[Remote CMD]: Disarm'
             else:
-                msg1 = "[Remote CMD] System status: failed to disarm"
+                msg1 = "[Remote CMD]: failed to disarm"
 
         elif msg.upper() == 'STATUS':
             msg1 = self.get_status()
