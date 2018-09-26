@@ -68,8 +68,8 @@ class GPIOMonitor(Thread):
         self.mqtt_client = MQTTClient(sid='alarm_mqtt', topics=[device_topic, group_topics], topic_qos=qos,
                                       host=broker, username=username, password=password)
 
-        # self.telegram_bot = TelegramBot()
-        # self.start_telegram_service()
+        self.telegram_bot = TelegramBot()
+        self.start_telegram_service()
 
         self.start_mqtt_service()
         self.logger = Log2File(self.log_filename, name_of_master=self.alias, time_in_log=1, screen=1)
@@ -381,7 +381,7 @@ class GPIOMonitor(Thread):
     def alert(self, msg):
         self.pub_msg(msg=msg)
         self.pub_msg(msg=msg, topic=self.alert_topic)
-        # self.telegram_bot.send_msg(msg)
+        self.telegram_bot.send_msg(msg)
 
 
 # ############ Parameters ###############################
