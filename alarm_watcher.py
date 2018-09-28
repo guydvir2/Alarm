@@ -1,7 +1,7 @@
 try:
     from gpiozero import Button, OutputDevice
 except:
-    print("GPIOSHIT")
+    print("can't find gpios ")
 
 import time
 from sys import path
@@ -103,8 +103,6 @@ class GPIOMonitor(Thread):
             time.sleep(1)
 
     def detect_hardware_state(self):
-        msgs = ['Full-mode Arm', 'Home-mode Arm', 'System Arm state', 'Alarm state']
-        state_msgs = ['armed_away', 'armed_home', 'disarmed', 'triggered', 'pending']
 
         for i, current_gpio in enumerate(self.current_state):
             if self.last_state[i] != current_gpio:
@@ -122,13 +120,17 @@ class GPIOMonitor(Thread):
                     self.mqtt_client.pub(payload=self.system_states[i], topic=self.state_topic, retain=True)
                     msg1 = '[watchdog] [%s] :%s' % (self.system_states[i], current_gpio)
 
-                    # test
+                    # test - publish in manul state topic only
                     self.mqtt_client.pub(payload="disarmed", topic=self.man_state_topic, retain=True)
 
                 # #### under-test#######
                 elif i == 2 and current_gpio is True:
                     self.mqtt_client.pub(payload="armed", topic=self.man_state_topic, retain=True)
-                    msg1 = '[watchdog] [%s] :%s' % (self.system_states[i], current_gpio)
+                    msg1 = '[watchdog] [%s] :%s' % (self.system_states[i], "False")
+
+                    if all([self.current_state[0], self.current_state[1]]) is False:
+                        self.mqtt_client.pub(payload=self.system_states[i][4], topic=self.state_topic, retain=True)
+                        msg1 = '[watchdog] [%s] :%s' % (self.system_states[i], "False")
 
                 # triggered
                 if i == 3 and current_gpio is True:
