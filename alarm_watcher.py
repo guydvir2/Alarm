@@ -115,7 +115,7 @@ class GPIOMonitor(Thread):
                 elif (i == 0 or i == 1) and current_gpio is False:
                     msg1 = '[watchdog] [%s] :%s' % (self.system_states[i], current_gpio)
 
-                # disarmed
+                # disarmed ( the actual question is for "ARM" )
                 if i == 2 and current_gpio is False:
                     self.mqtt_client.pub(payload=self.system_states[i], topic=self.state_topic, retain=True)
                     msg1 = '[watchdog] [%s] :%s' % (self.system_states[i], current_gpio)
@@ -129,7 +129,7 @@ class GPIOMonitor(Thread):
                     msg1 = '[watchdog] [%s] :%s' % (self.system_states[i], "False")
 
                     if all([self.current_state[0], self.current_state[1]]) is False:
-                        self.mqtt_client.pub(payload=self.system_states[i][4], topic=self.state_topic, retain=True)
+                        self.mqtt_client.pub(payload=self.system_states[4], topic=self.state_topic, retain=True)
                         msg1 = '[watchdog] [%s] :%s' % (self.system_states[i], "False")
 
                 # triggered
