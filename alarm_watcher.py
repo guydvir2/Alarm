@@ -113,7 +113,7 @@ class GPIOMonitor(Thread):
                     if current_gpio is True:
                         self.mqtt_client.pub(payload="armed", topic=self.man_state_topic, retain=True)
                         # armed using keypad
-                        if all([self.current_state[0], self.current_state[1]]) is False:
+                        if self.current_state[0] is False and self.current_state[1] is False:
                             self.mqtt_client.pub(payload=self.system_states[4], topic=self.state_topic, retain=True)
                     # return feedback - disarmed
                     else:
