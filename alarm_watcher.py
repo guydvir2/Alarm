@@ -227,31 +227,31 @@ class GPIOMonitor(Thread):
                 if self.armed_away_hw.value == 0:
                     self.armed_home_hw.on()
                     if self.armed_home_hw.value == 1:
-                        self.notify(msg="[Hardware CMD]: Home-arm [ON]")
+                        self.notify(msg="[Hardware]: Home-arm [ON]")
                         return 1
                     else:
-                        self.notify(msg="[Hardware CMD]: Home-arm [ON], failed")
+                        self.notify(msg="[Hardware]: Home-arm [ON], failed")
                         return 0
                 else:
-                    self.notify(msg="[Hardware CMD]: Home-arm [ON], failed")
+                    self.notify(msg="[Hardware]: Home-arm [ON], failed")
                     return 0
             # case it was not full armed
             elif self.fullarm_cb() == 0:
                 self.armed_home_hw.on()
                 if self.armed_home_hw.value == 1:
-                    self.notify(msg="[Hardware CMD]: Home-arm [ON]")
+                    self.notify(msg="[Hardware]: Home-arm [ON]")
                     return 1
                 else:
-                    self.notify(msg="[Hardware CMD]: Home-arm [ON], failed")
+                    self.notify(msg="[Hardware]: Home-arm [ON], failed")
                     return 0
 
         elif set_state == 0:
             self.armed_home_hw.off()
             if self.armed_home_hw.value == 0:
-                self.notify(msg="[Hardware CMD]: Home-arm [OFF]")
+                self.notify(msg="[Hardware]: Home-arm [OFF]")
                 return 0
             else:
-                self.notify(msg="[Hardware CMD]: Home-arm [OFF], failed")
+                self.notify(msg="[Hardware]: Home-arm [OFF], failed")
                 return 1
 
     def disarm(self):
@@ -264,7 +264,7 @@ class GPIOMonitor(Thread):
 
             # verify all is off
             if all([self.armed_home_hw.value, self.armed_away_hw.value, self.armed_indication.value]) is False:
-                self.notify(msg="[Hardware CMD]: Disarm, ok")
+                self.notify(msg="[Hardware]: Disarm, ok")
                 return 1
 
         # case 2: armed manually by user ( no indication by relay )
@@ -279,7 +279,7 @@ class GPIOMonitor(Thread):
 
             # verify
             if all([self.armed_home_hw.value, self.armed_away_hw.value, self.armed_indication.value]) is False:
-                self.notify(msg="[Hardware CMD]: Disarm, ok")
+                self.notify(msg="[Hardware]: Disarm, ok")
                 return 1
 
         # case 3: some error
@@ -293,11 +293,11 @@ class GPIOMonitor(Thread):
 
             # verify
             if all([self.armed_home_hw.value, self.armed_away_hw.value, self.armed_indication.value]) is False:
-                self.notify(msg="[Hardware CMD]: Disarm, ok")
+                self.notify(msg="[Hardware]: Disarm, ok")
                 return 1
 
         if any([self.armed_home_hw.value, self.armed_away_hw.value, self.armed_indication.value]) is True:
-            self.notify(msg="[Hardware CMD]: Disarm, fail", platform='mt')
+            self.notify(msg="[Hardware]: Disarm, fail", platform='mt')
             return 0
 
     def xport_last_log(self):
@@ -314,24 +314,24 @@ class GPIOMonitor(Thread):
         if msg.lower() == self.system_states[1]:
             self.homearm_cb(1)
             if self.homearm_cb() == 1:
-                msg1 = '[Remote CMD]: Home mode arm'
+                msg1 = '[Remote]: Home mode arm'
             else:
-                msg1 = "[Remote CMD] failed arming Home mode "
+                msg1 = "[Remote] failed arming Home mode "
 
         # armed_away
         elif msg.lower() == self.system_states[0]:
             self.fullarm_cb(1)
             if self.fullarm_cb() == 1:
-                msg1 = '[Remote CMD]: Full mode arm'
+                msg1 = '[Remote]: Full mode arm'
             else:
-                msg1 = "[Remote CMD] failed arming to Full mode"
+                msg1 = "[Remote] failed arming to Full mode"
 
         # disarmed
         elif msg.lower() == self.system_states[2]:
             if self.disarm() == 1:
-                msg1 = '[Remote CMD]: Disarm'
+                msg1 = '[Remote]: Disarm'
             else:
-                msg1 = "[Remote CMD]: failed to disarm"
+                msg1 = "[Remote]: failed to disarm"
 
         elif msg.upper() == 'STATUS':
             msg1 = self.get_status()
@@ -343,8 +343,8 @@ class GPIOMonitor(Thread):
 
         if origin == 't':
             self.notify(msg=msg1, platform='t')
-        else:
-            self.notify(msg=msg1, platform='m')
+        # else:
+        #     self.notify(msg=msg1, platform='m')
 
     def pub_msg(self, msg, topic=None):
         if topic is None:
